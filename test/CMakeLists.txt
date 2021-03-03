@@ -24,20 +24,33 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif ()
 
 # GTest and GMock do not play nicely with these flags, so disable them
-target_compile_options(gtest PRIVATE
+if (MSVC)
+    target_compile_options(gtest PRIVATE 
+    /w)
+else()
+    target_compile_options(gtest PRIVATE
         -Wno-ctor-dtor-privacy
         -Wno-missing-include-dirs
         -Wno-sign-promo)
-target_compile_options(gmock PRIVATE -Wno-pedantic)
+endif()
+if (MSVC)
+    target_compile_options(gmock PRIVATE 
+    /w)
+else()
+    target_compile_options(gmock PRIVATE -Wno-pedantic)
+endif()
 
 function(configure_test testExecutable)
     # Link against gtest library
     target_link_libraries(${testExecutable} gtest gtest_main gmock_main)
-    # Disable variadic macro warnings (can be a problem when compiling with Clang)
-    target_compile_options(${testExecutable} PRIVATE -Wno-gnu-zero-variadic-macro-arguments)
-    # Compile and link with coverage
-    target_compile_options(${testExecutable} PRIVATE -O0 --coverage)
-    target_link_options(${testExecutable} PRIVATE --coverage)
+    if (MSVC)
+    else()
+        # Disable variadic macro warnings (can be a problem when compiling with Clang)
+        target_compile_options(${testExecutable} PRIVATE -Wno-gnu-zero-variadic-macro-arguments)
+        # Compile and link with coverage
+        target_compile_options(${testExecutable} PRIVATE -O0 --coverage)
+        target_link_options(${testExecutable} PRIVATE --coverage)
+    endif()
     # Create test name as the capitalized form of the test executable
     string(TOUPPER ${testExecutable} testName)
     # Add executable to test suite
