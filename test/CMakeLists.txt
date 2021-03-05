@@ -78,3 +78,6 @@ target_include_directories(magiccarcontroller_test PUBLIC
         ${magiccar_dir}
         ${mocks})
 configure_test(magiccarcontroller_test)
+
+# Add discoverability for test runners in VS and VS Code
+include(CTest)
