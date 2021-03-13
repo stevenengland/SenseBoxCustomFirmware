@@ -1,7 +1,7 @@
 #pragma once
 
+#include "AnalogPortReader.h"
 #include "SoundLevelMeter.h"
-#include "../Arduino/AnalogPortReader.h"
 
 namespace SoundLevelMeter
 {

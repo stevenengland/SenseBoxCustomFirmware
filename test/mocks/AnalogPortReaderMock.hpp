@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "AnalogPortReader.h"
+#include "ArduinoAnalogPortReader.h"
 
 namespace Arduino
 {

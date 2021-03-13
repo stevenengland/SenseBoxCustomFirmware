@@ -81,13 +81,13 @@ configure_test(magiccarcontroller_test)
 
 # SoundLevelMeter test
 add_executable(DfRobotSen0232Should
-        ${SoundLevelMeterDir}/DfRobotSen0232.cpp
+        ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
         ${unit_tests}/DfRobotSen0232Should.cpp)
 target_include_directories(DfRobotSen0232Should PUBLIC
-        #${SoundLevelMeterDir}
-        #${ArduinoDir}
-        ${header_dir_list} # Recursive
-        ${mocks})
+        ${ComponentHeaderDirs} # Recursive
+        ${TestHeaderDirs} # Recursive
+        ${SketchesHeaderDirs} # Recursive
+        )
 configure_test(DfRobotSen0232Should)
 
 # Add discoverability for test runners in VS and VS Code

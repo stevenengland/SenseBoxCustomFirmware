@@ -33,29 +33,47 @@ else()
     )
 endif()
 
-# ========= Include path configurations =========
-
-MACRO(HEADER_DIRECTORIES return_list)
-    FILE(GLOB_RECURSE new_list *.h)
-    SET(dir_list "")
-    FOREACH(file_path ${new_list})
-        message(STATUS "[INFO] Adding ${file_path} header directory.")
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
-        SET(dir_list ${dir_list} ${dir_path})
-    ENDFOREACH()
-    LIST(REMOVE_DUPLICATES dir_list)
-    SET(${return_list} ${dir_list})
-ENDMACRO()
-
-HEADER_DIRECTORIES(header_dir_list)
-
-list(LENGTH header_dir_list header_dir_list_count)
-message(STATUS "[INFO] Found ${header_dir_list_count} header directories.")
-
 set(calculator_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/calculator)
 set(magiccar_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/MagicCarControllerTestable)
-set(SoundLevelMeterDir ${CMAKE_CURRENT_SOURCE_DIR}/Components/SoundLevelMeter)
-set(ArduinoDir ${CMAKE_CURRENT_SOURCE_DIR}/Components/Arduino)
+set(ComponentDir ${CMAKE_CURRENT_SOURCE_DIR}/Components)
+set(TestDir ${CMAKE_CURRENT_SOURCE_DIR}/test)
+set(SketchesDir ${CMAKE_CURRENT_SOURCE_DIR}/sketches)
+
+# ========= Read configuration =========
+
+file(STRINGS build_config.ini ConfigContents)
+foreach(NameAndValue ${ConfigContents})
+  # Strip leading spaces
+  string(REGEX REPLACE "^[ ]+" "" NameAndValue ${NameAndValue})
+  # Find variable name
+  string(REGEX MATCH "^[^=]+" Name ${NameAndValue})
+  # Find the value
+  string(REPLACE "${Name}=" "" Value ${NameAndValue})
+  # Set the variable
+  set(${Name} "${Value}")
+  message(STATUS "[INFO] Read ${Name} = ${Value} from config file.")
+endforeach()
+
+# ========= Include path configurations =========
+
+function(HEADER_DIRECTORIES returnList dirToProcess)
+    message(STATUS "[INFO] Looking for headers in: ${dirToProcess}")
+    FILE(GLOB_RECURSE new_list CONFIGURE_DEPENDS "${dirToProcess}/*.h" "${dirToProcess}/*.hpp")
+    SET(dirList "")
+    foreach(file_path ${new_list})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dirList ${dirList} ${dir_path})
+    endforeach()
+    LIST(REMOVE_DUPLICATES dirList)
+    foreach(dir ${dirList})
+        message(STATUS "[INFO] Adding header directory: ${dir}")
+    endforeach()
+    SET(${returnList} ${dirList} PARENT_SCOPE)
+endfunction()
+
+HEADER_DIRECTORIES(ComponentHeaderDirs ${ComponentDir})
+HEADER_DIRECTORIES(TestHeaderDirs ${TestDir})
+HEADER_DIRECTORIES(SketchesHeaderDirs ${SketchesDir})
 
 add_subdirectory(test)
 add_subdirectory(Components)
