@@ -84,11 +84,14 @@ add_executable(DfRobotSen0232Should
         ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
         ${unit_tests}/DfRobotSen0232Should.cpp)
 target_include_directories(DfRobotSen0232Should PUBLIC
-        ${ComponentHeaderDirs} # Recursive
-        ${TestHeaderDirs} # Recursive
-        ${SketchesHeaderDirs} # Recursive
+        ${AllTargetsIncludeDirs} # Recursive
         )
 configure_test(DfRobotSen0232Should)
 
 # Add discoverability for test runners in VS and VS Code
 include(CTest)
+
+#get_target_property(dirs DfRobotSen0232Should INCLUDE_DIRECTORIES)
+#foreach(dir ${dirs})
+#  message(STATUS "dir='${dir}'")
+#endforeach()

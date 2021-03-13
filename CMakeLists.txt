@@ -33,30 +33,34 @@ else()
     )
 endif()
 
+# ========= Set directory names =========
+
 set(calculator_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/calculator)
 set(magiccar_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/MagicCarControllerTestable)
 set(ComponentDir ${CMAKE_CURRENT_SOURCE_DIR}/Components)
 set(TestDir ${CMAKE_CURRENT_SOURCE_DIR}/test)
 set(SketchesDir ${CMAKE_CURRENT_SOURCE_DIR}/sketches)
 
-# ========= Read configuration =========
+# ========= Read configuration file and set configuration values =========
 
-file(STRINGS build_config.ini ConfigContents)
-foreach(NameAndValue ${ConfigContents})
-  # Strip leading spaces
-  string(REGEX REPLACE "^[ ]+" "" NameAndValue ${NameAndValue})
-  # Find variable name
-  string(REGEX MATCH "^[^=]+" Name ${NameAndValue})
-  # Find the value
-  string(REPLACE "${Name}=" "" Value ${NameAndValue})
-  # Set the variable
-  set(${Name} "${Value}")
-  message(STATUS "[INFO] Read ${Name} = ${Value} from config file.")
-endforeach()
+function(SetConfigurationValuesByFile fileName)
+    file(STRINGS ${fileName} configContents)
+    foreach(NameAndValue ${configContents})
+      # Strip leading spaces
+      string(REGEX REPLACE "^[ ]+" "" NameAndValue ${NameAndValue})
+      # Find variable name
+      string(REGEX MATCH "^[^=]+" Name ${NameAndValue})
+      # Find the value
+      string(REPLACE "${Name}=" "" Value ${NameAndValue})
+      # Set the variable
+      set(${Name} "${Value}" PARENT_SCOPE)
+      message(STATUS "[INFO] Read ${Name}=${Value} from config file ${fileName}.")
+    endforeach()
+endfunction()
 
-# ========= Include path configurations =========
+# ========= Find and return header directories =========
 
-function(HEADER_DIRECTORIES returnList dirToProcess)
+function(SetHeaderDirectories returnList dirToProcess)
     message(STATUS "[INFO] Looking for headers in: ${dirToProcess}")
     FILE(GLOB_RECURSE new_list CONFIGURE_DEPENDS "${dirToProcess}/*.h" "${dirToProcess}/*.hpp")
     SET(dirList "")
@@ -71,9 +75,11 @@ function(HEADER_DIRECTORIES returnList dirToProcess)
     SET(${returnList} ${dirList} PARENT_SCOPE)
 endfunction()
 
-HEADER_DIRECTORIES(ComponentHeaderDirs ${ComponentDir})
-HEADER_DIRECTORIES(TestHeaderDirs ${TestDir})
-HEADER_DIRECTORIES(SketchesHeaderDirs ${SketchesDir})
+SetHeaderDirectories(ComponentHeaderDirs ${ComponentDir})
+SetHeaderDirectories(TestHeaderDirs ${TestDir})
+SetHeaderDirectories(SketchesHeaderDirs ${SketchesDir})
+
+list(APPEND AllTargetsIncludeDirs ${ComponentHeaderDirs} ${TestHeaderDirs} ${SketchesHeaderDirs})
 
 add_subdirectory(test)
 add_subdirectory(Components)
