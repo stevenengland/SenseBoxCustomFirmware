@@ -81,7 +81,28 @@ SetHeaderDirectories(SketchesHeaderDirs ${SketchesDir})
 
 list(APPEND AllTargetsIncludeDirs ${ComponentHeaderDirs} ${TestHeaderDirs} ${SketchesHeaderDirs})
 
+# ========= Adding subdirectories =========
+
 add_subdirectory(test)
 add_subdirectory(Components)
+
+# ========= Target for firmware build process =========
+
+FILE(GLOB_RECURSE firmwareFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ino")
+
+add_executable(BuildFirmware
+        ${SketchesDir}/BuildFirmware.cpp)
+
+foreach(firmwareFile ${firmwareFiles})
+    GET_FILENAME_COMPONENT(firmwareFilePath ${firmwareFile} PATH)
+    message(STATUS "[INFO] Creating post build firmware command for ${firmwareFile}.")
+    add_custom_command(
+        TARGET BuildFirmware POST_BUILD 
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMAND arduino-cli compile --fqbn sensebox:samd:sb --libraries "./Components/" ${firmwareFilePath}
+    )
+endforeach()
+
+# ========= Testing =========
 
 enable_testing()

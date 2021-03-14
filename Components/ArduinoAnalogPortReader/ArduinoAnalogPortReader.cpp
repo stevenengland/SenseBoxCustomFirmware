@@ -1,4 +1,5 @@
 #include "ArduinoAnalogPortReader.h"
+#include "Arduino.h"
 
 namespace Arduino
 {
