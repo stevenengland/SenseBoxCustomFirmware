@@ -41,6 +41,7 @@ The most important part is the second include path with the wildcards at the end
 
 ## Build the .ino Files
 The Arduino IDE is a little bit of a mess when it comes to path inclusion. So the build must be performed with the new Arduino CLI.
+Please add the arduino-cli executable to your OSes PATH. That is needed if you build the project because all the .ino files will be compiled as part of the testing strategy.
 After installation of Arduino CLI configure it for the SenseBox:
 
 ```
