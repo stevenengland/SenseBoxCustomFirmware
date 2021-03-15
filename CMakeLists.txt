@@ -99,6 +99,7 @@ foreach(firmwareFile ${firmwareFiles})
     add_custom_command(
         TARGET BuildFirmware POST_BUILD 
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E echo "[INFO] Building firmware file: ${firmwareFile}"
         COMMAND arduino-cli compile --fqbn sensebox:samd:sb --libraries "./Components/" ${firmwareFilePath}
     )
 endforeach()
