@@ -59,25 +59,6 @@ endfunction(configure_test)
 
 # ========= Unit test configurations =========
 set(unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/ut)
-set(mocks ${CMAKE_CURRENT_SOURCE_DIR}/mocks)
-
-# Calculator test
-add_executable(calculator_test
-        ${calculator_dir}/Calculator.cpp
-        ${unit_tests}/calculator_test.cpp)
-target_include_directories(calculator_test PUBLIC
-        ${calculator_dir}
-        ${mocks})
-configure_test(calculator_test)
-
-# MagicCarController test
-add_executable(magiccarcontroller_test
-        ${magiccar_dir}/MagicCarController.cpp
-        ${unit_tests}/MagicCarController_test.cpp)
-target_include_directories(magiccarcontroller_test PUBLIC
-        ${magiccar_dir}
-        ${mocks})
-configure_test(magiccarcontroller_test)
 
 add_executable(DfRobotSen0232Should
         ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
