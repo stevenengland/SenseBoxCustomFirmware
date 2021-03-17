@@ -35,11 +35,9 @@ endif()
 
 # ========= Set directory names =========
 
-set(calculator_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/calculator)
-set(magiccar_dir ${CMAKE_CURRENT_SOURCE_DIR}/sketches/MagicCarControllerTestable)
 set(ComponentDir ${CMAKE_CURRENT_SOURCE_DIR}/Components)
-set(TestDir ${CMAKE_CURRENT_SOURCE_DIR}/test)
-set(SketchesDir ${CMAKE_CURRENT_SOURCE_DIR}/sketches)
+set(TestDir ${CMAKE_CURRENT_SOURCE_DIR}/Tests)
+set(SketchesDir ${CMAKE_CURRENT_SOURCE_DIR}/Sketches)
 
 # ========= Read configuration file and set configuration values =========
 
@@ -83,8 +81,8 @@ list(APPEND AllTargetsIncludeDirs ${ComponentHeaderDirs} ${TestHeaderDirs} ${Ske
 
 # ========= Adding subdirectories =========
 
-add_subdirectory(test)
-add_subdirectory(Components)
+add_subdirectory(${TestDir})
+add_subdirectory(${ComponentDir})
 
 # ========= Target for firmware build process =========
 
