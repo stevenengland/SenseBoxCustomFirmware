@@ -58,7 +58,7 @@ function(configure_test testExecutable)
 endfunction(configure_test)
 
 # ========= Unit test configurations =========
-set(unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/ut)
+set(unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/UnitTests)
 
 add_executable(DfRobotSen0232Should
         ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
