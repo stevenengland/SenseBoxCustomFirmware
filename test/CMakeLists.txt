@@ -79,7 +79,6 @@ target_include_directories(magiccarcontroller_test PUBLIC
         ${mocks})
 configure_test(magiccarcontroller_test)
 
-# SoundLevelMeter test
 add_executable(DfRobotSen0232Should
         ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
         ${unit_tests}/DfRobotSen0232Should.cpp)
@@ -87,6 +86,14 @@ target_include_directories(DfRobotSen0232Should PUBLIC
         ${AllTargetsIncludeDirs} # Recursive
         )
 configure_test(DfRobotSen0232Should)
+
+add_executable(WifiManagerShould
+        ${ComponentDir}/Wifi/WifiManager.cpp
+        ${unit_tests}/WifiManagerShould.cpp)
+target_include_directories(WifiManagerShould PUBLIC
+        ${AllTargetsIncludeDirs} # Recursive
+        )
+configure_test(WifiManagerShould)
 
 # Add discoverability for test runners in VS and VS Code
 include(CTest)
