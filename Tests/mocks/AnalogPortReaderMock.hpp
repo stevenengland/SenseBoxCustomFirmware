@@ -1,13 +1,16 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "ArduinoAnalogPortReader.h"
+#include "AnalogPortReader.h"
 
-namespace Arduino
+namespace Connectivity
 {
-    class AnalogPortReaderMock final : public AnalogPortReader
+    namespace AnalogPorts
     {
-    public:
-        MOCK_METHOD(float, ReadVoltageFromPin, (int pin), (override));
-    };
+        class AnalogPortReaderMock final : public AnalogPortReader
+        {
+        public:
+            MOCK_METHOD(float, ReadVoltageFromPin, (int pin), (override));
+        };
+    }
 }

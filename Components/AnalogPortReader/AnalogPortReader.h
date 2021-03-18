@@ -1,11 +1,14 @@
 #pragma once
 
-namespace Arduino
+namespace Connectivity
 {
-	struct AnalogPortReader
-	{
-		virtual ~AnalogPortReader() = default;
-		
-		virtual float ReadVoltageFromPin(int pin) = 0;
-	};
+    namespace AnalogPorts
+    {
+        struct AnalogPortReader
+        {
+            virtual ~AnalogPortReader() = default;
+
+            virtual float ReadVoltageFromPin(int pin) = 0;
+        };
+    }
 }

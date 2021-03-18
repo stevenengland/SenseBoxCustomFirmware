@@ -9,14 +9,14 @@ namespace SoundLevelMeter
     {
     public:
         explicit DfRobotSen0232(
-            Arduino::AnalogPortReader& portReader,
+            Connectivity::AnalogPorts::AnalogPortReader& portReader,
             int soundSensorPin
         );
 
         float ReadValue() override;
 
     private:
-        Arduino::AnalogPortReader& _portReader;
+        Connectivity::AnalogPorts::AnalogPortReader& _portReader;
         int _soundSensorPin;
     };
 }
