@@ -69,7 +69,7 @@ target_include_directories(DfRobotSen0232Should PUBLIC
 configure_test(DfRobotSen0232Should)
 
 add_executable(WifiManagerShould
-        ${ComponentDir}/Wifi/WifiManager.cpp
+        ${ComponentDir}/WifiManager/WifiManager.cpp
         ${unit_tests}/WifiManagerShould.cpp)
 target_include_directories(WifiManagerShould PUBLIC
         ${AllTargetsIncludeDirs} # Recursive

@@ -40,6 +40,12 @@ It should ultimately look something like this:
 The most important part is the second include path with the wildcards at the end.
 
 ## Build the .ino Files
+
+### Arduino Secrets
+In order to build some of the examples you have to look if the sketch directory contains a **arduino_secrets.h.template** file. Please make a copy of that file and rename it to **arduino_secrets.h** and replace the contents with real world items.
+The template file is used for source control and must be kept. The renamed copy will be ignored by the source control system (git).
+
+### Arduino CLI
 The Arduino IDE is a little bit of a mess when it comes to path inclusion. So the build must be performed with the new Arduino CLI.
 Please add the arduino-cli executable to your OSes PATH. That is needed if you build the project because all the .ino files will be compiled as part of the testing strategy.
 After installation of Arduino CLI configure it for the SenseBox:
@@ -52,8 +58,9 @@ arduino-cli --additional-urls https://raw.githubusercontent.com/sensebox/senseBo
 Afterwards builds can be done via commands like this:
 
 ```
-arduino-cli compile --fqbn sensebox:samd --libraries "/path/to/the/libraries" "/path/to/your/sketch" 
+arduino-cli compile --fqbn sensebox:samd:sb --libraries "/path/to/the/libraries" "/path/to/your/sketch" 
 ```
+You can also have a look at the output of the build process where the actual used compile commands are listed.
 
 # Credits
 The testable project structure is following the idea seen here: 

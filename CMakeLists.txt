@@ -93,11 +93,15 @@ add_executable(BuildFirmware
 
 foreach(firmwareFile ${firmwareFiles})
     GET_FILENAME_COMPONENT(firmwareFilePath ${firmwareFile} PATH)
+    #GET_FILENAME_COMPONENT(firmwareFileNameWe ${firmwareFile} NAME_WE)
+    set(buildCommand "arduino-cli compile --fqbn sensebox:samd:sb --libraries \"./Components/\" -u -p \"PORT\" ${firmwareFilePath}")
     message(STATUS "[INFO] Creating post build firmware command for ${firmwareFile}.")
     add_custom_command(
         TARGET BuildFirmware POST_BUILD 
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         COMMAND ${CMAKE_COMMAND} -E echo "[INFO] Building firmware file: ${firmwareFile}"
+        COMMAND ${CMAKE_COMMAND} -E echo "[INFO] Use this command to upload a copy to the board: ${buildCommand}"
+        #COMMAND arduino-cli compile --fqbn sensebox:samd:sb --build-path "${CMAKE_CURRENT_SOURCE_DIR}/firmware_build/${firmwareFileNameWe}" --libraries "./Components/" ${firmwareFilePath}
         COMMAND arduino-cli compile --fqbn sensebox:samd:sb --libraries "./Components/" ${firmwareFilePath}
     )
 endforeach()
