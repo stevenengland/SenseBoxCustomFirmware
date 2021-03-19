@@ -12,12 +12,6 @@ namespace Connectivity
     {
         void Winc1500::Connect(const char ssid[], const char password[])
         {
-            // WINC1500 (WiFi-Bee) in XBEE1 Socket
-            senseBoxIO.powerXB1(false); // power off to reset WINC1500
-            delay(250);
-            senseBoxIO.powerXB1(true);  // power on
-            delay(250);
-            
             WiFi.begin(ssid, password);
         }
 
