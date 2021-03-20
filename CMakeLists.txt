@@ -38,6 +38,7 @@ endif()
 set(ComponentDir ${CMAKE_CURRENT_SOURCE_DIR}/Components)
 set(TestDir ${CMAKE_CURRENT_SOURCE_DIR}/Tests)
 set(SketchesDir ${CMAKE_CURRENT_SOURCE_DIR}/Sketches)
+set(ConfigurationsDir ${CMAKE_CURRENT_SOURCE_DIR}/Configurations)
 
 # ========= Read configuration file and set configuration values =========
 
@@ -78,6 +79,17 @@ SetHeaderDirectories(TestHeaderDirs ${TestDir})
 SetHeaderDirectories(SketchesHeaderDirs ${SketchesDir})
 
 list(APPEND AllTargetsIncludeDirs ${ComponentHeaderDirs} ${TestHeaderDirs} ${SketchesHeaderDirs})
+
+# ========= Providing intellisense for Arduino =========
+
+if(EXISTS "${ConfigurationsDir}/arduino.ini")
+    SetConfigurationValuesByFile("${ConfigurationsDir}/arduino.ini")
+    FILE(GLOB_RECURSE allSourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+    add_executable(IntellisenseProject EXCLUDE_FROM_ALL ${allSourceFiles})
+    SetHeaderDirectories(ArduinoPackagesHeaderDirs ${ArduinoUserPackagesDir})
+    SetHeaderDirectories(ArduinoLibrariesHeaderDirs ${ArduinoUserLibrariesDir})
+    target_include_directories(IntellisenseProject PUBLIC ${ArduinoPackagesHeaderDirs} ${ArduinoLibrariesHeaderDirs} ${AllTargetsIncludeDirs})
+endif()
 
 # ========= Adding subdirectories =========
 

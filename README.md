@@ -4,13 +4,29 @@
 This repo contains modularized firmware for the public science project [SenseBox](https://sensebox.de/) that I need for my personal projects.
 
 ## Using an IDE
-The Arduino IDE lacks a lot of features. Therefore all the .ino files are meant to be edited outside of Arduino IDE. Please refer to guides telling you how to set
-up your IDE. The most important part is to include all the Arduino header files/libraries so that you won't earn all the compiler errors
-telling you that specific #include commands cannot find the file mentioned.
+The Arduino IDE lacks a lot of features. Therefore all the .ino files in this project are meant to be edited outside of the Arduino IDE. Please refer to guides telling you how to set
+up your specific IDE how to do this or read the sections below for working solutions I can tell you. 
 
-### Visual Studio Code
-You need either an Arduino IDE running on your machine or the Arduino CLI as an alternative that provide you with the headers and libs.
-In your project directory edit or create the .vscode/
+The most important part is to include all the Arduino header files/libraries so that you won't earn all the compiler errors
+telling you that specific #include commands cannot find the file mentioned (like #include "Arduino.h"). 
+No matter what solution you prefer you need either an Arduino IDE running on your machine or the Arduino CLI as an alternative that provide you with the headers and libs.
+
+### CMake based solution for every IDE
+**DISCLAIMER:** This solution is the one that should work with every IDE that is capable of dealing with CMake. 
+But this solution should be seen as a workaround because it uses concepts like GLOBbing and EXLUDE_FROM_ALLing. It works nice so far but can lead into trouble in the future. We will see ;)
+
+In order to use this solution you need to create a file called arduino.ini within the Configurations directory. 
+That file won't be picked up by git. 
+Add the following lines with your environments Arduino paths to it and you're done:
+
+```
+# ./Configurations/arduino.ini
+ArduinoUserPackagesDir=C:/Users/steven/AppData/Local/Arduino15/packages
+ArduinoUserLibrariesDir=C:/Users/steven/Documents/Arduino/libraries
+```
+
+### Visual Studio Code specific solution
+In your project directory edit or create the .vscode/c_cpp_properties.json
 It should ultimately look something like this:
 ```
 {
