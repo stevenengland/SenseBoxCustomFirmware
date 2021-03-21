@@ -35,7 +35,8 @@ It should ultimately look something like this:
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Users/steven/AppData/Local/Arduino15/packages/**"
+                "C:/Users/steven/AppData/Local/Arduino15/packages/**",
+                "C:/Users/steven/Documents/Arduino/libraries/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -54,6 +55,12 @@ It should ultimately look something like this:
 }
 ```
 The most important part is the second include path with the wildcards at the end.
+
+## Handling .ino Extension
+It may help you to tell your favorite IDE to handle .ino files as c++ files.
+
++ Visual Studio: Tools > Options > Text Editor > File Extension > ino : Microsoft Visual C++
++ Visual Studio Code: global settings.json > files.associations > "*.ino": "cpp" 
 
 ## Build the .ino Files
 
