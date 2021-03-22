@@ -76,6 +76,14 @@ target_include_directories(WifiManagerShould PUBLIC
         )
 configure_test(WifiManagerShould)
 
+add_executable(StandardTimeConverterShould
+        ${ComponentDir}/TimeConverter/StandardTimeConverter.cpp
+        ${unit_tests}/StandardTimeConverterShould.cpp)
+target_include_directories(StandardTimeConverterShould PUBLIC
+        ${AllTargetsIncludeDirs} # Recursive
+        )
+configure_test(StandardTimeConverterShould)
+
 # Add discoverability for test runners in VS and VS Code
 include(CTest)
 

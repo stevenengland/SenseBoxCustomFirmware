@@ -1,21 +1,15 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include <gtest.h>
+#include <gmock.h>
 
 #include "AnalogPortReaderMock.hpp"
 #include "DfRobotSen0232.h"
-#include "gmock/gmock-actions.h"
-#include "gmock/gmock-matchers.h"
+#include <gmock-actions.h>
+#include <gmock-matchers.h>
 
 using namespace testing;
 
 namespace SoundLevelMeterTests
 {
-    TEST(calculator_test, add_WhenPositiveArguments_WillReturnCorrectSum)
-    {
-        const auto expectedResult = 52;
-        EXPECT_EQ(52, expectedResult);
-    }
-
     TEST(DfRobotSen0232Should, ReadSensorValue)
     {
         // Arrange
