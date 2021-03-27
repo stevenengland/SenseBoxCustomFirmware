@@ -1,18 +1,19 @@
 #include "gtest.h"
-#include <tuple>
 #include "StandardTimeConverter.h"
 
 namespace TimeTests
 {
     class StandardTimeConverterShould :public ::testing::TestWithParam<std::tuple<std::string, int>> {
     protected:
-        Time::StandardTimeConverter converter;
+        Time::StandardTimeConverter _converter;
     };
 
     TEST_P(StandardTimeConverterShould, ReturnCorrectUtcTime) {
         std::string expected = std::get<0>(GetParam());
         int epoch = std::get<1>(GetParam());
-        ASSERT_EQ(expected, converter.GetUtcTime(epoch));
+        char strBuffer[35]{};
+        _converter.GetUtcTime(epoch, strBuffer);
+        ASSERT_EQ(expected, strBuffer);
     }
 
     INSTANTIATE_TEST_SUITE_P(

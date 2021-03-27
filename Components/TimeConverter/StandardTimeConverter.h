@@ -7,6 +7,6 @@ namespace Time
     class StandardTimeConverter final : public TimeConverter
     {
     public:
-        char* GetUtcTime(time_t epochTime) override;
+        void GetUtcTime(time_t epochTime, char* utcTimeOutput) override;
     };
 }

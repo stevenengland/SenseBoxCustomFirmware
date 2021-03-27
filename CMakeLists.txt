@@ -8,6 +8,7 @@ if (MSVC)
             /W4 
             /WX
             )
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 else()
     add_compile_options(
             -Wcast-align
