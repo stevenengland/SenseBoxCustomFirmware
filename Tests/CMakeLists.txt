@@ -84,6 +84,14 @@ target_include_directories(StandardTimeConverterShould PUBLIC
         )
 configure_test(StandardTimeConverterShould)
 
+add_executable(TimerShould
+        ${ComponentDir}/Time/Timer.cpp
+        ${unit_tests}/TimerShould.cpp)
+target_include_directories(TimerShould PUBLIC
+        ${AllTargetsIncludeDirs} # Recursive
+        )
+configure_test(TimerShould)
+
 # Add discoverability for test runners in VS and VS Code
 include(CTest)
 
