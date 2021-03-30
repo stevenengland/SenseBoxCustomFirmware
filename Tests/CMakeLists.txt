@@ -58,39 +58,25 @@ function(configure_test testExecutable)
 endfunction(configure_test)
 
 # ========= Unit test configurations =========
-set(unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/UnitTests)
+set(unitTestDir ${CMAKE_CURRENT_SOURCE_DIR}/UnitTests)
 
-add_executable(DfRobotSen0232Should
-        ${ComponentDir}/DfRobotSen0232/DfRobotSen0232.cpp
-        ${unit_tests}/DfRobotSen0232Should.cpp)
-target_include_directories(DfRobotSen0232Should PUBLIC
-        ${AllTargetsIncludeDirs} # Recursive
-        )
-configure_test(DfRobotSen0232Should)
-
-add_executable(WifiManagerShould
-        ${ComponentDir}/WifiManager/WifiManager.cpp
-        ${unit_tests}/WifiManagerShould.cpp)
-target_include_directories(WifiManagerShould PUBLIC
-        ${AllTargetsIncludeDirs} # Recursive
-        )
-configure_test(WifiManagerShould)
-
-add_executable(TimeConverterShould
-        ${ComponentDir}/TimeConverter/TimeConverter.cpp
-        ${unit_tests}/TimeConverterShould.cpp)
-target_include_directories(TimeConverterShould PUBLIC
-        ${AllTargetsIncludeDirs} # Recursive
-        )
-configure_test(TimeConverterShould)
-
-add_executable(TimerShould
-        ${ComponentDir}/Time/Timer.cpp
-        ${unit_tests}/TimerShould.cpp)
-target_include_directories(TimerShould PUBLIC
-        ${AllTargetsIncludeDirs} # Recursive
-        )
-configure_test(TimerShould)
+FILE(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "${unitTestDir}/*Should.cpp")
+foreach(testFile ${testFiles})
+    GET_FILENAME_COMPONENT(testFileNameWe ${testFile} NAME_WE)
+    GET_FILENAME_COMPONENT(testFileName ${testFile} NAME)
+    STRING(REPLACE "Should.cpp" ".cpp" testFileNameWoShould ${testFileName})
+    message(STATUS "[Info] Generating test target for ${testFileName}")
+    FILE(GLOB_RECURSE utFiles CONFIGURE_DEPENDS "${ComponentDir}/*${testFileNameWoShould}")
+    list(GET utFiles 0 utFile)
+    message(STATUS "[Info] Targets unit under test: ${utFile}")
+    add_executable(${testFileNameWe}
+            ${utFile}
+            ${testFile})
+    target_include_directories(${testFileNameWe} PUBLIC
+            ${AllTargetsIncludeDirs} # Recursive
+            )
+    configure_test(${testFileNameWe})
+endforeach()
 
 # Add discoverability for test runners in VS and VS Code
 include(CTest)
