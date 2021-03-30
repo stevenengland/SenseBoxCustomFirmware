@@ -85,6 +85,12 @@ arduino-cli compile --fqbn sensebox:samd:sb --libraries "/path/to/the/libraries"
 ```
 You can also have a look at the output of the build process where the actual used compile commands are listed.
 
+### Additional Libraries
+Following third party libraries are used:
+```
+arduino-cli.exe lib install "Adafruit SleepyDog Library"
+```
+
 # Credits
 The testable project structure is following the idea seen here: 
 [How to write testable C++ for Arduino](https://youtu.be/jCLgqaXS6Gg)
