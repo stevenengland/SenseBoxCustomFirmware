@@ -1,11 +1,11 @@
 #include "gtest.h"
-#include "StandardTimeConverter.h"
+#include "TimeConverter.h"
 
 namespace TimeTests
 {
     class StandardTimeConverterShould :public ::testing::TestWithParam<std::tuple<std::string, int>> {
     protected:
-        Time::StandardTimeConverter _converter;
+        Time::TimeConverter _converter;
     };
 
     TEST_P(StandardTimeConverterShould, ReturnCorrectUtcTime) {

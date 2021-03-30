@@ -1,11 +1,11 @@
-#include "StandardTimeConverter.h"
+#include "TimeConverter.h"
 
 #include <time.h>
 #include <string.h>
 
 namespace Time
 {
-    void StandardTimeConverter::GetUtcTime(time_t epochTime, char* utcTimeOutput)
+    void TimeConverter::GetUtcTime(time_t epochTime, char* utcTimeOutput)
     {
         struct tm* dt = gmtime(&epochTime);
         char strBuffer[35]{};

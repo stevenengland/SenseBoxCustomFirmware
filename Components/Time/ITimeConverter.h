@@ -4,10 +4,10 @@
 
 namespace Time
 {
-    class TimeConverter
+    class ITimeConverter
     {
     public:
-        virtual ~TimeConverter() = default;
+        virtual ~ITimeConverter() = default;
 
         virtual void GetUtcTime(time_t epochTime, char* utcTimeOutput) = 0;
     };

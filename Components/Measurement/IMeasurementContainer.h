@@ -4,10 +4,10 @@
 
 namespace Measurement
 {
-    class MeasurementContainer
+    class IMeasurementContainer
     {
     public:
-        virtual ~MeasurementContainer() = default;
+        virtual ~IMeasurementContainer() = default;
         
         virtual void AddMeasurement(Measurement &measurement) = 0;
         virtual void RemoveMeasurements(int count) = 0;

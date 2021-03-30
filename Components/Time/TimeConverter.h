@@ -1,10 +1,10 @@
 #pragma once
 
-#include "TimeConverter.h"
+#include "ITimeConverter.h"
 
 namespace Time
 {
-    class StandardTimeConverter final : public TimeConverter
+    class TimeConverter final : public ITimeConverter
     {
     public:
         void GetUtcTime(time_t epochTime, char* utcTimeOutput) override;

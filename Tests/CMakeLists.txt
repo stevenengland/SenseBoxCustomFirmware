@@ -76,13 +76,13 @@ target_include_directories(WifiManagerShould PUBLIC
         )
 configure_test(WifiManagerShould)
 
-add_executable(StandardTimeConverterShould
-        ${ComponentDir}/TimeConverter/StandardTimeConverter.cpp
-        ${unit_tests}/StandardTimeConverterShould.cpp)
-target_include_directories(StandardTimeConverterShould PUBLIC
+add_executable(TimeConverterShould
+        ${ComponentDir}/TimeConverter/TimeConverter.cpp
+        ${unit_tests}/TimeConverterShould.cpp)
+target_include_directories(TimeConverterShould PUBLIC
         ${AllTargetsIncludeDirs} # Recursive
         )
-configure_test(StandardTimeConverterShould)
+configure_test(TimeConverterShould)
 
 add_executable(TimerShould
         ${ComponentDir}/Time/Timer.cpp
