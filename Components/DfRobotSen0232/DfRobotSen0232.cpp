@@ -3,7 +3,7 @@
 namespace SoundLevelMeter
 {
     DfRobotSen0232::DfRobotSen0232(
-        Connectivity::AnalogPorts::AnalogPortReader& portReader,
+        Peripherals::IAnalogPortReader& portReader,
         const int soundSensorPin)
         :
     _portReader{portReader},

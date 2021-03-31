@@ -1,16 +1,13 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "AnalogPortReader.h"
+#include "IAnalogPortReader.h"
 
-namespace Connectivity
+namespace Peripherals
 {
-    namespace AnalogPorts
+    class AnalogPortReaderMock final : public IAnalogPortReader
     {
-        class AnalogPortReaderMock final : public AnalogPortReader
-        {
-        public:
-            MOCK_METHOD(float, ReadVoltageFromPin, (int pin), (override));
-        };
-    }
+    public:
+        MOCK_METHOD(float, ReadVoltageFromPin, (int pin), (override));
+    };
 }

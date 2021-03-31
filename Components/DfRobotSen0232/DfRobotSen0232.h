@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AnalogPortReader.h"
+#include "IAnalogPortReader.h"
 #include "SoundLevelMeter.h"
 
 namespace SoundLevelMeter
@@ -9,14 +9,14 @@ namespace SoundLevelMeter
     {
     public:
         explicit DfRobotSen0232(
-            Connectivity::AnalogPorts::AnalogPortReader& portReader,
+            Peripherals::IAnalogPortReader& portReader,
             int soundSensorPin
         );
 
         float ReadValue() override;
 
     private:
-        Connectivity::AnalogPorts::AnalogPortReader& _portReader;
+        Peripherals::IAnalogPortReader& _portReader;
         int _soundSensorPin;
     };
 }

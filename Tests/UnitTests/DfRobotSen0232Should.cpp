@@ -13,7 +13,7 @@ namespace SoundLevelMeterTests
     TEST(DfRobotSen0232Should, ReadSensorValue)
     {
         // Arrange
-        Connectivity::AnalogPorts::AnalogPortReaderMock mock;
+        Peripherals::AnalogPortReaderMock mock;
         ON_CALL(mock, ReadVoltageFromPin(_)).WillByDefault(Return(6206.0606f));
         SoundLevelMeter::DfRobotSen0232 slm{ mock, 1 };
 

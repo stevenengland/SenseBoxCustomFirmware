@@ -4,7 +4,7 @@
 #include "senseBoxIO.h"
 
 const int SoundSensorPin = A1;  // This pin reads the analog voltage from the sound level meter
-Connectivity::AnalogPorts::SenseBoxAnalogPortReader analogPortReader;
+Peripherals::SenseBoxAnalogPortReader analogPortReader;
 SoundLevelMeter::DfRobotSen0232 slm{analogPortReader, SoundSensorPin};
 
 void setup()
