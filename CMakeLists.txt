@@ -62,17 +62,17 @@ endfunction()
 
 function(SetHeaderDirectories returnList dirToProcess)
     message(STATUS "[INFO] Looking for headers in: ${dirToProcess}")
-    FILE(GLOB_RECURSE new_list CONFIGURE_DEPENDS "${dirToProcess}/*.h" "${dirToProcess}/*.hpp")
-    SET(dirList "")
+    file(GLOB_RECURSE new_list CONFIGURE_DEPENDS "${dirToProcess}/*.h" "${dirToProcess}/*.hpp")
+    set(dirList "")
     foreach(file_path ${new_list})
         GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
         SET(dirList ${dirList} ${dir_path})
     endforeach()
-    LIST(REMOVE_DUPLICATES dirList)
+    list(REMOVE_DUPLICATES dirList)
     foreach(dir ${dirList})
         message(STATUS "[INFO] Adding header directory: ${dir}")
     endforeach()
-    SET(${returnList} ${dirList} PARENT_SCOPE)
+    set(${returnList} ${dirList} PARENT_SCOPE)
 endfunction()
 
 SetHeaderDirectories(ComponentHeaderDirs ${ComponentDir})
@@ -85,8 +85,8 @@ list(APPEND AllTargetsIncludeDirs ${ComponentHeaderDirs} ${TestHeaderDirs} ${Ske
 
 if(EXISTS "${ConfigurationsDir}/arduino.ini")
     SetConfigurationValuesByFile("${ConfigurationsDir}/arduino.ini")
-    FILE(GLOB_RECURSE allCppSourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-    FILE(GLOB_RECURSE allInoSourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ino")
+    file(GLOB_RECURSE allCppSourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+    file(GLOB_RECURSE allInoSourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ino")
     add_executable(IntellisenseProject EXCLUDE_FROM_ALL ${allCppSourceFiles} ${allInoSourceFiles})
     foreach(inoFile ${allInoSourceFiles})
         set_source_files_properties(${inoFile} PROPERTIES LANGUAGE CXX)
@@ -103,13 +103,13 @@ add_subdirectory(${ComponentDir})
 
 # ========= Target for firmware build process =========
 
-FILE(GLOB_RECURSE firmwareFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ino")
+file(GLOB_RECURSE firmwareFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ino")
 
 add_executable(BuildFirmware
         ${SketchesDir}/BuildFirmware.cpp)
 
 foreach(firmwareFile ${firmwareFiles})
-    GET_FILENAME_COMPONENT(firmwareFilePath ${firmwareFile} PATH)
+    get_filename_component(firmwareFilePath ${firmwareFile} PATH)
     #GET_FILENAME_COMPONENT(firmwareFileNameWe ${firmwareFile} NAME_WE)
     set(buildCommand "arduino-cli compile --fqbn sensebox:samd:sb --libraries \"./Components/\" -u -p \"PORT\" ${firmwareFilePath}")
     message(STATUS "[INFO] Creating post build firmware command for ${firmwareFile}.")

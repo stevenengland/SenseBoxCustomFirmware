@@ -60,13 +60,13 @@ endfunction(configure_test)
 # ========= Unit test configurations =========
 set(unitTestDir ${CMAKE_CURRENT_SOURCE_DIR}/UnitTests)
 
-FILE(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "${unitTestDir}/*Should.cpp")
+file(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "${unitTestDir}/*Should.cpp")
 foreach(testFile ${testFiles})
-    GET_FILENAME_COMPONENT(testFileNameWe ${testFile} NAME_WE)
-    GET_FILENAME_COMPONENT(testFileName ${testFile} NAME)
-    STRING(REPLACE "Should.cpp" ".cpp" testFileNameWoShould ${testFileName})
+    get_filename_component(testFileNameWe ${testFile} NAME_WE)
+    get_filename_component(testFileName ${testFile} NAME)
+    string(REPLACE "Should.cpp" ".cpp" testFileNameWoShould ${testFileName})
     message(STATUS "[Info] Generating test target for ${testFileName}")
-    FILE(GLOB_RECURSE utFiles CONFIGURE_DEPENDS "${ComponentDir}/*${testFileNameWoShould}")
+    file(GLOB_RECURSE utFiles CONFIGURE_DEPENDS "${ComponentDir}/*${testFileNameWoShould}")
     list(GET utFiles 0 utFile)
     message(STATUS "[Info] Targets unit under test: ${utFile}")
     add_executable(${testFileNameWe}
