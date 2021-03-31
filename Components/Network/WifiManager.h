@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WifiConnector.h"
+#include "IWifiConnector.h"
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
@@ -10,7 +10,7 @@ namespace Connectivity
         {
         public:
             WifiManager(
-                WifiConnector& connector,
+                IWifiConnector& connector,
                 const char* ssid,
                 const char* password
             );
@@ -19,7 +19,7 @@ namespace Connectivity
             void Reconnect() const;
             bool IsConnected() const;
         private:
-            WifiConnector& _connector;
+            IWifiConnector& _connector;
             const char* _ssid;
             const char* _password;
         };

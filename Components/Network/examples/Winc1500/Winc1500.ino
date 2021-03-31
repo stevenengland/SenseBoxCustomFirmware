@@ -1,13 +1,13 @@
 #include "WifiManager.h"
-#include "Winc1500.h"
+#include "Winc1500WifiConnector.h"
 #include "Arduino.h"
 #include "senseBoxIO.h"
 #include "arduino_secrets.h" 
 
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
-Connectivity::Wifi::Winc1500 wifiConnector;
-Connectivity::Wifi::WifiManager wifiManager{wifiConnector, ssid, pass};
+Network::Wifi::Winc1500WifiConnector wifiConnector;
+Network::Wifi::WifiManager wifiManager{wifiConnector, ssid, pass};
 
 void setup()
 {

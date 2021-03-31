@@ -1,11 +1,11 @@
 #pragma once
-#include "WifiConnector.h"
+#include "IWifiConnector.h"
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
-        class Winc1500 final : public WifiConnector
+        class Winc1500WifiConnector final : public IWifiConnector
         {
         public:
             void Connect(const char* ssid, const char* password) override;

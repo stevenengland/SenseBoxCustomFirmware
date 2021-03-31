@@ -3,24 +3,24 @@
 #include <driver/source/nmasic.h>
 #include "senseBoxIO.h"
 #include "Arduino.h"
-#include "Winc1500.h"
+#include "Winc1500WifiConnector.h"
 
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
-        void Winc1500::Connect(const char ssid[], const char password[])
+        void Winc1500WifiConnector::Connect(const char ssid[], const char password[])
         {
             WiFi.begin(ssid, password);
         }
 
-        void Winc1500::Disconnect()
+        void Winc1500WifiConnector::Disconnect()
         {
             WiFi.disconnect();
         }
 
-        bool Winc1500::IsConnected()
+        bool Winc1500WifiConnector::IsConnected()
         {
             return (WiFi.status() == WL_CONNECTED);
         }

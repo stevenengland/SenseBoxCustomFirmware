@@ -1,11 +1,11 @@
 #include "WifiManager.h"
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
         WifiManager::WifiManager(
-            WifiConnector& connector,
+            IWifiConnector& connector,
             const char* ssid,
             const char* password
             )

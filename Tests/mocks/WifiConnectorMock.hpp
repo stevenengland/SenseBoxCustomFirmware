@@ -1,15 +1,15 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "WifiConnector.h"
+#include "IWifiConnector.h"
 
 using namespace testing;
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
-        class WifiConnectorMock final : public WifiConnector
+        class WifiConnectorMock final : public IWifiConnector
         {
         public:
             MOCK_METHOD(void, Connect, (const char* ssid, const char* password), (override));

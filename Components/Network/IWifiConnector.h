@@ -1,13 +1,13 @@
 #pragma once
 
-namespace Connectivity
+namespace Network
 {
     namespace Wifi
     {
-        class WifiConnector
+        class IWifiConnector
         {
         public:
-            virtual ~WifiConnector() = default;
+            virtual ~IWifiConnector() = default;
 
             virtual void Connect(const char* ssid, const char* password) = 0;
             virtual void Disconnect() = 0;
