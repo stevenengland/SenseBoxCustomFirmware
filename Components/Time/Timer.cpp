@@ -2,7 +2,7 @@
 
 namespace Time
 {
-    Timer::Timer(ElapsedTimeProvider& elapsedTimeProvider, const long interval)
+    Timer::Timer(IElapsedTimeProvider& elapsedTimeProvider, const long interval)
         : _elapsedTimeProvider(elapsedTimeProvider), _interval(interval)
     {
     }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ElapsedTimeProvider.h"
+#include "IElapsedTimeProvider.h"
 
 namespace Time
 {
-    class ArduinoElapsedTimeProvider final : public ElapsedTimeProvider
+    class ArduinoElapsedTimeProvider final : public IElapsedTimeProvider
     {
     public:
         unsigned long ElapsedMilliseconds() override;

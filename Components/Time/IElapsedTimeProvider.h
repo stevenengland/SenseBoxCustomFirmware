@@ -2,10 +2,10 @@
 
 namespace Time
 {
-    class ElapsedTimeProvider
+    class IElapsedTimeProvider
     {
     public:
-        virtual ~ElapsedTimeProvider() = default;
+        virtual ~IElapsedTimeProvider() = default;
 
         virtual unsigned long ElapsedMilliseconds() = 0;
         virtual void WaitSync(int milliseconds) = 0;

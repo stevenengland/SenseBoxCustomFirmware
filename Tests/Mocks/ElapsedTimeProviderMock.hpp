@@ -1,11 +1,11 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "ElapsedTimeProvider.h"
+#include "IElapsedTimeProvider.h"
 
 namespace Time
 {
-    class ElapsedTimeProviderMock final : public ElapsedTimeProvider
+    class ElapsedTimeProviderMock final : public IElapsedTimeProvider
     {
     public:
         MOCK_METHOD(unsigned long, ElapsedMilliseconds, (), (override));

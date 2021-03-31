@@ -4,10 +4,10 @@
 
 namespace Time
 {
-    class TimeProvider
+    class ITimeProvider
     {
     public:
-        virtual ~TimeProvider() = default;
+        virtual ~ITimeProvider() = default;
 
         virtual time_t GetEpochTime() = 0;
     };
