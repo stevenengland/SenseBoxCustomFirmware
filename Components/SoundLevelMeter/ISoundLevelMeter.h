@@ -2,9 +2,9 @@
 
 namespace SoundLevelMeter
 {
-    struct SoundLevelMeter
+    struct ISoundLevelMeter
     {
-        virtual ~SoundLevelMeter() = default;
+        virtual ~ISoundLevelMeter() = default;
         
         virtual float ReadValue() = 0;
     };
