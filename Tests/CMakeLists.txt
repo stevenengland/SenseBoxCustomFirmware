@@ -58,9 +58,10 @@ function(configure_test testExecutable)
 endfunction(configure_test)
 
 # ========= Unit test configurations =========
+# Auto-Configure simple unit test pairs consisting of a <unitUnderTestFileName>Should.cpp and a <unitUnderTestFileName>.cpp pair. 
 set(unitTestDir ${CMAKE_CURRENT_SOURCE_DIR}/UnitTests)
-
 file(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "${unitTestDir}/*Should.cpp")
+#file(GLOB_RECURSE sourceFiles CONFIGURE_DEPENDS "${ComponentDir}/*.cpp" "${ComponentDir}/*.h")
 foreach(testFile ${testFiles})
     get_filename_component(testFileNameWe ${testFile} NAME_WE)
     get_filename_component(testFileName ${testFile} NAME)
@@ -71,12 +72,19 @@ foreach(testFile ${testFiles})
     message(STATUS "[Info] Targets unit under test: ${utFile}")
     add_executable(${testFileNameWe}
             ${utFile}
+            #${sourceFiles}
             ${testFile})
     target_include_directories(${testFileNameWe} PUBLIC
             ${AllTargetsIncludeDirs} # Recursive
             )
     configure_test(${testFileNameWe})
 endforeach()
+
+# Add specific files to the test targets that are not only limited to the above pairs
+target_sources(SenseBoxMcuSketchCouplingShould
+    PRIVATE
+        ${ComponentDir}/Time/Timer.cpp
+)
 
 # Add discoverability for test runners in VS and VS Code
 include(CTest)

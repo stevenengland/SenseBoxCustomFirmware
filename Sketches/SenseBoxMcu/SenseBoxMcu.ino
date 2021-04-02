@@ -1,32 +1,23 @@
 #include "Arduino.h"
-
-#include "Timer.h"
+#include "ArduinoWatchDog.h"
 #include "ArduinoElapsedTimeProvider.h"
+#include "SenseboxMcuSketchCoupling.h"
 
+// Prepare IoC
+Time::ArduinoWatchDog WatchDog;
 Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
-Time::Timer SoundLevelMeasurementTimer{ ElapsedTimeProvider, 300 };
-Time::Timer GeneralMeasurementTimer{ ElapsedTimeProvider, 60000 };
-Time::Timer UploadToOsemTimer{ ElapsedTimeProvider, 300000 };
+Sketch::SenseboxMcuSketchCoupling SketchCoupling
+{
+    WatchDog,
+    ElapsedTimeProvider
+};
 
 // ReSharper disable once CppInconsistentNaming
 void setup() {
-    
+    SketchCoupling.Setup();
 }
 
 // ReSharper disable once CppInconsistentNaming
 void loop() {
-    if(SoundLevelMeasurementTimer.HasIntervalElapsed())
-    {
-        // Measure Sound Level
-    }
-
-    if(GeneralMeasurementTimer.HasIntervalElapsed())
-    {
-        // Measure all other sensors
-    }
-
-    if(UploadToOsemTimer.HasIntervalElapsed())
-    {
-        // Upload to OSeM
-    }
+    SketchCoupling.Loop();
 }
