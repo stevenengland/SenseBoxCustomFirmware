@@ -1,8 +1,12 @@
 #include <gtest.h>
 #include <gmock.h>
+
+#include "AnalogPortReaderMock.hpp"
 #include "ElapsedTimeProviderMock.hpp"
+#include "MeasurementContainerMock.hpp"
 #include "WatchDogMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
+#include "SoundLevelMeterMock.hpp"
 
 using namespace testing;
 
@@ -13,10 +17,15 @@ namespace SenseboxMcuSketchCouplingTests
     public:
         Time::WatchDogMock WatchDogMock;
         Time::ElapsedTimeProviderMock ElapsedTimeProviderMock;
+        Peripherals::AnalogPortReaderMock AnalogPortReaderMock;
+        SoundLevelMeter::SoundLevelMeterMock SoundLevelMeterMock;
+        Measurement::MeasurementContainerMock MeasurementContainerMock;
         Sketch::SenseboxMcuSketchCoupling SketchCoupling
         {
             WatchDogMock,
-            ElapsedTimeProviderMock
+            ElapsedTimeProviderMock,
+            SoundLevelMeterMock,
+            MeasurementContainerMock
         };
     };
 
