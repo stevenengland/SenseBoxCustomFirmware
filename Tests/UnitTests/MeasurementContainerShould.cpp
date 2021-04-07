@@ -16,7 +16,7 @@ namespace MeasurementContainerTests
 
     TEST_F(MeasurementContainerShould, ReturnFalse_IfIndexOfSearchedMeasurementIsNegative)
     {
-        container.AddMeasurement(measurementToAdd);
+        Measurement::Measurement measurementToAdd;
         Measurement::Measurement measurementToGet;
 
         container.AddMeasurement(measurementToAdd);
