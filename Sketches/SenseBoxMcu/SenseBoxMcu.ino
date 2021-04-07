@@ -10,7 +10,7 @@
 Time::ArduinoWatchDog WatchDog;
 Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
 Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
-SoundLevelMeter::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
+Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
 Measurement::MeasurementContainer MeasurementContainer{1000};
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {

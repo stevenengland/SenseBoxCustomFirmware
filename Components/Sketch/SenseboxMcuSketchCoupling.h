@@ -5,7 +5,7 @@
 #include "Timer.h"
 #include "IElapsedTimeProvider.h"
 #include "IMeasurementContainer.h"
-#include "ISoundLevelMeter.h"
+#include "ISensor.h"
 
 namespace Sketch
 {
@@ -15,7 +15,7 @@ namespace Sketch
         SenseboxMcuSketchCoupling(
             Time::IWatchDog& watchDog,
             Time::IElapsedTimeProvider& elapsedTimeProvider,
-            SoundLevelMeter::ISoundLevelMeter& soundLevelMeter,
+            Sensor::ISensor& soundLevelMeter,
             Measurement::IMeasurementContainer& measurementContainer)
             : _watchDog(watchDog),
               _elapsedTimeProvider(elapsedTimeProvider),
@@ -32,7 +32,7 @@ namespace Sketch
     private:
         Time::IWatchDog& _watchDog;
         Time::IElapsedTimeProvider& _elapsedTimeProvider;
-        SoundLevelMeter::ISoundLevelMeter& _soundLevelMeter;
+        Sensor::ISensor& _soundLevelMeter;
         Measurement::IMeasurementContainer& _measurementContainer;
         //Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, 300 };
         //Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, 60000 };

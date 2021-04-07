@@ -1,11 +1,11 @@
 #pragma once
 
 #include <gmock/gmock.h>
-#include "ISoundLevelMeter.h"
+#include "ISensor.h"
 
-namespace SoundLevelMeter
+namespace Sensor
 {
-    class SoundLevelMeterMock final : public ISoundLevelMeter
+    class SoundLevelMeterMock final : public ISensor
     {
     public:
         MOCK_METHOD(float, ReadValue, (), (override));

@@ -1,6 +1,6 @@
 #include "DfRobotSen0232.h"
 
-namespace SoundLevelMeter
+namespace Sensor
 {
     DfRobotSen0232::DfRobotSen0232(
         Peripherals::IAnalogPortReader& portReader,

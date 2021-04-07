@@ -18,7 +18,7 @@ namespace SenseboxMcuSketchCouplingTests
         Time::WatchDogMock WatchDogMock;
         Time::ElapsedTimeProviderMock ElapsedTimeProviderMock;
         Peripherals::AnalogPortReaderMock AnalogPortReaderMock;
-        SoundLevelMeter::SoundLevelMeterMock SoundLevelMeterMock;
+        Sensor::SoundLevelMeterMock SoundLevelMeterMock;
         Measurement::MeasurementContainerMock MeasurementContainerMock;
         Sketch::SenseboxMcuSketchCoupling SketchCoupling
         {

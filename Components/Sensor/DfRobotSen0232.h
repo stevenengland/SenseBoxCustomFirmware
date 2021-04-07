@@ -1,11 +1,11 @@
 #pragma once
 
 #include "IAnalogPortReader.h"
-#include "ISoundLevelMeter.h"
+#include "ISensor.h"
 
-namespace SoundLevelMeter
+namespace Sensor
 {
-    class DfRobotSen0232 final : public ISoundLevelMeter
+    class DfRobotSen0232 final : public ISensor
     {
     public:
         explicit DfRobotSen0232(

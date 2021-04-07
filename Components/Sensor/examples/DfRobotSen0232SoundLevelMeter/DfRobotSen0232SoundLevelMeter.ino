@@ -5,7 +5,7 @@
 
 const int SoundSensorPin = A1;  // This pin reads the analog voltage from the sound level meter
 Peripherals::SenseBoxAnalogPortReader analogPortReader;
-SoundLevelMeter::DfRobotSen0232 slm{analogPortReader, SoundSensorPin};
+Sensor::DfRobotSen0232 slm{analogPortReader, SoundSensorPin};
 
 void setup()
 {
