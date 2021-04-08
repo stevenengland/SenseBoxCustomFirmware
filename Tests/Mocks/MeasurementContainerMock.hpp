@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gmock/gmock.h>
 #include "IMeasurementContainer.h"
 #include "Measurement.h"
 
