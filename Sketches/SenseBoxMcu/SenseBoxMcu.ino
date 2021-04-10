@@ -16,6 +16,7 @@ const char Pass[] = SECRET_PASS;
 const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID;
 
 // Prepare IoC
+Peripherals::SenseBoxIoMapper SenseBoxIoMapper;
 Time::ArduinoWatchDog WatchDog;
 Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
 Time::Winc1500TimeProvider TimeProvider;
@@ -32,6 +33,7 @@ Measurement::MeasurementManager SlmMeasurementManager
 };
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
+    SenseBoxIoMapper,
     WatchDog,
     ElapsedTimeProvider,
     TimeProvider,

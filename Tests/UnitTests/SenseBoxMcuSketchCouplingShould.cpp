@@ -5,6 +5,7 @@
 #include "ElapsedTimeProviderMock.hpp"
 #include "MeasurementContainerMock.hpp"
 #include "MeasurementManagerMock.hpp"
+#include "SenseBoxIoMapperMock.hpp"
 #include "WatchDogMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
 #include "SoundLevelMeterMock.hpp"
@@ -17,6 +18,7 @@ namespace SenseboxMcuSketchCouplingTests
     class SenseboxMcuSketchCouplingShould : public Test
     {
     public:
+        Peripherals::SenseBoxIoMapperMock SenseBoxIoMapperMock;
         Time::WatchDogMock WatchDogMock;
         Time::ElapsedTimeProviderMock ElapsedTimeProviderMock;
         Time::TimeProviderMock TimeProviderMock;
@@ -26,6 +28,7 @@ namespace SenseboxMcuSketchCouplingTests
         Measurement::MeasurementManagerMock MeasurementManagerMock;
         Sketch::SenseboxMcuSketchCoupling SketchCoupling
         {
+            SenseBoxIoMapperMock,
             WatchDogMock,
             ElapsedTimeProviderMock,
             TimeProviderMock,
@@ -34,6 +37,13 @@ namespace SenseboxMcuSketchCouplingTests
             MeasurementManagerMock
         };
     };
+
+    TEST_F(SenseboxMcuSketchCouplingShould, BringUpAllPins_WhenSetupIsCalled)
+    {
+        EXPECT_CALL(SenseBoxIoMapperMock, PowerAll()).Times(1);
+
+        SketchCoupling.Setup();
+    }
 
     TEST_F(SenseboxMcuSketchCouplingShould, EnableWatchDog_WhenSetupEnds)
     {

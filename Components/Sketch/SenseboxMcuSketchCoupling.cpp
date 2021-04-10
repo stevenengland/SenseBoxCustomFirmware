@@ -7,6 +7,9 @@ namespace Sketch
         // Disable WatchDog until setup is done.
         _watchDog.Disable();
 
+        // Get up all pins
+        _senseBoxIoMapper.PowerAll();
+
         // Check that the time provider is up and running.
         if (!CheckTimeProvider(20))
         {

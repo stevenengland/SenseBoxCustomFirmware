@@ -8,6 +8,7 @@
 #include "ISensor.h"
 #include "IMeasurementManager.h"
 #include "ITimeProvider.h"
+#include "SenseBoxIoMapper.h"
 
 namespace Sketch
 {
@@ -15,13 +16,15 @@ namespace Sketch
     {
     public:
         SenseboxMcuSketchCoupling(
+            Peripherals::ISenseBoxIoMapper& senseBoxIoMapper,
             Time::IWatchDog& watchDog,
             Time::IElapsedTimeProvider& elapsedTimeProvider,
             Time::ITimeProvider& timeProvider,
             Sensor::ISensor& soundLevelMeter,
             Measurement::IMeasurementContainer& measurementContainer,
             Measurement::IMeasurementManager& slmMeasurementManager)
-            : _watchDog(watchDog),
+            : _senseBoxIoMapper(senseBoxIoMapper),
+              _watchDog(watchDog),
               _elapsedTimeProvider(elapsedTimeProvider),
               _timeProvider(timeProvider),
               _soundLevelMeter(soundLevelMeter),
@@ -36,6 +39,7 @@ namespace Sketch
         void Setup() override;
         void Loop() override;
     private:
+        Peripherals::ISenseBoxIoMapper& _senseBoxIoMapper;
         Time::IWatchDog& _watchDog;
         Time::IElapsedTimeProvider& _elapsedTimeProvider;
         Time::ITimeProvider& _timeProvider;
