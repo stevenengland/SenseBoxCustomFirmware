@@ -3,7 +3,7 @@
 #include "IMeasurementAggregationStrategy.h"
 #include "IMeasurementManager.h"
 #include "IMeasurementContainer.h"
-#include "../Time/ITimeConverter.h"
+#include "ITimeConverter.h"
 
 namespace Measurement
 {
@@ -13,13 +13,11 @@ namespace Measurement
         MeasurementManager(
             IMeasurementContainer& container,
             IMeasurementAggregationStrategy& aggregationStrategy,
-            Time::ITimeConverter& timeConverter,
             const time_t intervalDuration,
-            char* sensorId)
+            const char* sensorId)
             :
             _container(container),
             _aggregationStrategy(aggregationStrategy),
-            _timeConverter(timeConverter),
             _intervalDuration(intervalDuration),
             _sensorId(sensorId)
         {
@@ -30,10 +28,9 @@ namespace Measurement
     private:
         IMeasurementContainer& _container;
         IMeasurementAggregationStrategy& _aggregationStrategy;
-        Time::ITimeConverter& _timeConverter;
         time_t _intervalDuration;
         time_t _intervalStart = 0;
-        char* _sensorId;
+        const char* _sensorId;
         float _intervalAggregate = 0;
     };
 }

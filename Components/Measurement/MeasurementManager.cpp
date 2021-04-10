@@ -12,9 +12,7 @@ namespace Measurement
         if (measurementTime - _intervalStart >= _intervalDuration)
         {
             // Interval elapsed
-            char timeBuffer[21]{};
-            _timeConverter.GetUtcTime(_intervalStart, timeBuffer);
-            Measurement measurement{ _sensorId, _intervalAggregate, timeBuffer };
+            Measurement measurement{ _sensorId, _intervalAggregate, _intervalStart };
             _container.AddMeasurement(measurement);
 
             _intervalStart = measurementTime;
@@ -23,7 +21,7 @@ namespace Measurement
         _intervalAggregate = _aggregationStrategy.Aggregate(_intervalAggregate, value);
     }
 
-    void MeasurementManager::SetInterval(time_t interval)
+    void MeasurementManager::SetInterval(const time_t interval)
     {
         _intervalDuration = interval;
     }

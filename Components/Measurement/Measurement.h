@@ -1,11 +1,13 @@
 #pragma once
 
+#include <ctime>
+
 namespace Measurement
 {
     typedef struct
     {
         const char* SensorId;
         float Value;
-        const char* Timestamp;
+        time_t Timestamp;
     } Measurement;
 }

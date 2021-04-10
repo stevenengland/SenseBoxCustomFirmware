@@ -13,12 +13,10 @@ namespace MeasurementManagerTests
     protected:
         Measurement::MeasurementContainerMock _container;
         Measurement::MeasurementAggregationStrategyMock _aggregationStrategy;
-        Time::TimeConverterMock _timeConverter;
         Measurement::MeasurementManager _manager
         {
             _container,
             _aggregationStrategy,
-            _timeConverter,
             3,
             "TestSensor"
         };
@@ -67,17 +65,29 @@ namespace MeasurementManagerTests
         _manager.Record(4, 101);
     }
 
+    TEST_F(MeasurementManagerShould, RecordForEveryCall_IfIntervalIsSetToZero)
+    {
+        EXPECT_CALL(_container, AddMeasurement(_))
+            .Times(3);
+
+        _manager.SetInterval(0);
+
+        _manager.Record(3, 101);
+        _manager.Record(1, 101);
+        _manager.Record(4, 101);
+    }
+
     TEST_F(MeasurementManagerShould, AddSpecificMeasurementToContainer_WhenIntervalElapsed)
     {
-        char dateString[] = "2018-02-01T23:18:02Z";
+        //char dateString[] = "2018-02-01T23:18:02Z";
         Measurement::Measurement measurment;
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(1)
             .WillOnce(SaveArg<0>(&measurment));
-        EXPECT_CALL(_timeConverter, GetUtcTime(_, _))
-            .Times(1)
-        //.WillOnce(SetArgPointee<1>(ByRef(dateString)));
-        .WillOnce(SetArrayArgument<1>(dateString, dateString + strlen(dateString) + 1));
+        //EXPECT_CALL(_timeConverter, GetUtcTime(_, _))
+        //    .Times(1)
+        ////.WillOnce(SetArgPointee<1>(ByRef(dateString)));
+        //.WillOnce(SetArrayArgument<1>(dateString, dateString + strlen(dateString) + 1));
         EXPECT_CALL(_aggregationStrategy, Aggregate(_,_))
             .Times(3)
             .WillOnce(Return(3.0f))
@@ -89,7 +99,7 @@ namespace MeasurementManagerTests
         _manager.Record(4, 104);
 
         ASSERT_STREQ("TestSensor", measurment.SensorId);
-        //ASSERT_STREQ("2018-02-01T23:18:02Z", measurment.Timestamp);
+        ASSERT_EQ(101, measurment.Timestamp);
         ASSERT_FLOAT_EQ(2.0f, measurment.Value);
     }
 }
