@@ -5,20 +5,21 @@ namespace Measurement
 {
     void MeasurementContainer::AddMeasurement(Measurement& measurement)
     {
-        if (_measurements.size() < _capacity)
+        if (_currentItemIndex < _capacity)
         {
-            _measurements.push_back(measurement);
+            _measurements[_currentItemIndex] = measurement;
+            _currentItemIndex++;
         }
     }
 
     void MeasurementContainer::ClearMeasurements()
     {
-        _measurements.clear();
+        _currentItemIndex = 0;
     }
 
-    bool MeasurementContainer::GetMeasurement(int index, Measurement& measurement)
+    bool MeasurementContainer::GetMeasurement(const int index, Measurement& measurement)
     {
-        if (_measurements.empty() || index < 0 || static_cast<int>(_measurements.size()) < index)
+        if (_currentItemIndex == 0 || index < 0 || static_cast<int>(_currentItemIndex) < index)
         {
             return false;
         }
@@ -29,8 +30,7 @@ namespace Measurement
 
     int MeasurementContainer::Count()
     {
-        auto size = _measurements.size();
-        return static_cast<int>(size); // Could overflow if size is gt INT_MAX.
+        return static_cast<int>(_currentItemIndex); // Could overflow if size is gt INT_MAX.
     }
 
 }

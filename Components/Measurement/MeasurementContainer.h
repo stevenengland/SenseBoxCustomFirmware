@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "IMeasurementContainer.h"
 
 namespace Measurement
@@ -12,6 +11,12 @@ namespace Measurement
             :
         _capacity(capacity)
         {
+            _measurements = new Measurement[capacity];
+        }
+
+        ~MeasurementContainer()
+        {
+            delete[] _measurements;
         }
 
         void AddMeasurement(Measurement& measurement) override;
@@ -20,7 +25,8 @@ namespace Measurement
         int Count() override;
 
     private:
-        std::vector<Measurement> _measurements{};
+        Measurement* _measurements = nullptr;
         size_t _capacity;
+        size_t _currentItemIndex = 0;
     };
 }
