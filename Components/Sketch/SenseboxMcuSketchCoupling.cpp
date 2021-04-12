@@ -11,13 +11,13 @@ namespace Sketch
         _senseBoxIoMapper.PowerAll();
 
         // Check that the time provider is up and running.
-        if (!CheckTimeProvider(20))
+        if (!CheckTimeProvider(_configuration.TimeProvider_TimeRequest_RetryCount))
         {
-            // Reset
+            Reset();
         }
 
         // Finally enable WatchDog
-        _watchDog.Enable(16000);
+        _watchDog.Enable(_configuration.WatchDog_KeepAlive_TimeoutInterval);
     }
 
     void SenseboxMcuSketchCoupling::Loop()
@@ -47,15 +47,22 @@ namespace Sketch
 
     bool SenseboxMcuSketchCoupling::CheckTimeProvider(const int retryCounter) const
     {
-        for (auto i = 1; i < retryCounter; ++i)
+        for (auto i = 1; i <= retryCounter; ++i)
         {
-            if (_timeProvider.GetEpochTime() > 1)
+            if (_timeProvider.GetEpochTime() > 0)
             {
                 return true;
             }
+
+            _elapsedTimeProvider.WaitSync(_configuration.TimeProvider_TimeRequest_RetryInterval);
+            _watchDog.Reset();
         }
 
         return false;
     }
 
+    void SenseboxMcuSketchCoupling::Reset() const
+    {
+        _elapsedTimeProvider.WaitSync(_watchDogInterval * 2);
+    }
 }

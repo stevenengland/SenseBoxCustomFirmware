@@ -9,6 +9,7 @@
 #include "IMeasurementManager.h"
 #include "ITimeProvider.h"
 #include "SenseBoxIoMapper.h"
+#include "SketchConfiguration.h"
 
 namespace Sketch
 {
@@ -22,7 +23,8 @@ namespace Sketch
             Time::ITimeProvider& timeProvider,
             Sensor::ISensor& soundLevelMeter,
             Measurement::IMeasurementContainer& measurementContainer,
-            Measurement::IMeasurementManager& slmMeasurementManager)
+            Measurement::IMeasurementManager& slmMeasurementManager,
+            SketchConfiguration& configuration)
             : _senseBoxIoMapper(senseBoxIoMapper),
               _watchDog(watchDog),
               _elapsedTimeProvider(elapsedTimeProvider),
@@ -30,9 +32,10 @@ namespace Sketch
               _soundLevelMeter(soundLevelMeter),
               _measurementContainer(measurementContainer),
               _slmMeasurementManager(slmMeasurementManager),
-              _soundLevelMeasurementTimer(_elapsedTimeProvider, 300),
-              _generalMeasurementTimer(_elapsedTimeProvider, 60000),
-              _uploadToOsemTimer(_elapsedTimeProvider, 300000)
+              _configuration(configuration)
+              // _soundLevelMeasurementTimer(_elapsedTimeProvider, 300),
+              //_generalMeasurementTimer(_elapsedTimeProvider, 60000),
+              //_uploadToOsemTimer(_elapsedTimeProvider, 300000)
         {
         }
 
@@ -46,13 +49,17 @@ namespace Sketch
         Sensor::ISensor& _soundLevelMeter;
         Measurement::IMeasurementContainer& _measurementContainer;
         Measurement::IMeasurementManager& _slmMeasurementManager;
-        //Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, 300 };
-        //Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, 60000 };
-        //Time::Timer _uploadToOsemTimer{ _elapsedTimeProvider, 300000 };
-        Time::Timer _soundLevelMeasurementTimer;
-        Time::Timer _generalMeasurementTimer;
-        Time::Timer _uploadToOsemTimer;
+        SketchConfiguration& _configuration;
+        Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, _configuration.SoundLevelMeter_Measure_Interval };
+        Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
+        Time::Timer _uploadToOsemTimer{ _elapsedTimeProvider, _configuration.Osem_Upload_Interval };
+        //Time::Timer _soundLevelMeasurementTimer;
+        //Time::Timer _generalMeasurementTimer;
+        //Time::Timer _uploadToOsemTimer;
+
+        int _watchDogInterval = _configuration.WatchDog_KeepAlive_TimeoutInterval;
 
         bool CheckTimeProvider(int retryCounter) const;
+        void Reset() const;
     };
 }

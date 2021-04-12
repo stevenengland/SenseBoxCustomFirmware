@@ -15,6 +15,21 @@ const char Ssid[] = SECRET_SSID;
 const char Pass[] = SECRET_PASS;
 const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID;
 
+// Prepare Config
+Sketch::SketchConfiguration Configuration = []
+{
+    Sketch::SketchConfiguration c{};
+    
+    c.TimeProvider_TimeRequest_RetryInterval = 1000;
+    c.TimeProvider_TimeRequest_RetryCount = 5;
+    c.WatchDog_KeepAlive_TimeoutInterval = 16000;
+    c.Sensor_Measure_Interval = 60000;
+    c.SoundLevelMeter_Measure_Interval = 300;
+    c.Osem_Upload_Interval = 300000;
+
+    return c;
+}();
+
 // Prepare IoC
 Peripherals::SenseBoxIoMapper SenseBoxIoMapper;
 Time::ArduinoWatchDog WatchDog;
@@ -39,7 +54,8 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     TimeProvider,
     SlMeter,
     MeasurementContainer,
-    SlmMeasurementManager
+    SlmMeasurementManager,
+    Configuration
 };
 
 // ReSharper disable once CppInconsistentNaming
