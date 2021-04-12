@@ -11,7 +11,7 @@ namespace WifiManagerTests
         // Arrange
         Network::Wifi::WifiConnectorMock wifiConnectorMock;
         EXPECT_CALL(wifiConnectorMock, Connect(_, _)).Times(Exactly(1));
-        const Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
+        Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
 
         // Act
         wifiManager.Connect();
@@ -24,7 +24,7 @@ namespace WifiManagerTests
         // Arrange
         Network::Wifi::WifiConnectorMock wifiConnectorMock;
         EXPECT_CALL(wifiConnectorMock, Disconnect()).Times(Exactly(1));
-        const Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
+        Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
 
         // Act
         wifiManager.Disconnect();
@@ -38,7 +38,7 @@ namespace WifiManagerTests
         Network::Wifi::WifiConnectorMock wifiConnectorMock;
         EXPECT_CALL(wifiConnectorMock, Disconnect()).Times(Exactly(1));
         EXPECT_CALL(wifiConnectorMock, Connect(_, _)).Times(Exactly(1));
-        const Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
+        Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
 
         // Act
         wifiManager.Reconnect();
@@ -51,10 +51,10 @@ namespace WifiManagerTests
         // Arrange
         Network::Wifi::WifiConnectorMock wifiConnectorMock;
         ON_CALL(wifiConnectorMock, IsConnected()).WillByDefault(Return(true));
-        const Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
+        Network::Wifi::WifiManager wifiManager{ wifiConnectorMock, "test", "test" };
 
         // Act
-        const auto isConnected = wifiManager.IsConnected();
+        auto isConnected = wifiManager.IsConnected();
 
         // Assert
         EXPECT_TRUE(isConnected);

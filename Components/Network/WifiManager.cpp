@@ -4,35 +4,23 @@ namespace Network
 {
     namespace Wifi
     {
-        WifiManager::WifiManager(
-            IWifiConnector& connector,
-            const char* ssid,
-            const char* password
-            )
-            :
-        _connector{ connector },
-        _ssid{ ssid },
-        _password{ password }
-        {
-        }
-
-        void WifiManager::Connect() const
+        void WifiManager::Connect()
         {
             _connector.Connect(_ssid, _password);
         }
 
-        void WifiManager::Disconnect() const
+        void WifiManager::Disconnect()
         {
             _connector.Disconnect();
         }
 
-        void WifiManager::Reconnect() const
+        void WifiManager::Reconnect()
         {
             _connector.Disconnect();
             _connector.Connect(_ssid, _password);
         }
 
-        bool WifiManager::IsConnected() const
+        bool WifiManager::IsConnected()
         {
             return _connector.IsConnected();
         }
