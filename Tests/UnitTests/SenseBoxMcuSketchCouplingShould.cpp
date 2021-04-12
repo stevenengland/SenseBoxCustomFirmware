@@ -84,11 +84,19 @@ namespace SenseboxMcuSketchCouplingTests
         _sketchCoupling.Loop();
     }
 
-    TEST_F(SenseboxMcuSketchCouplingShould, Reset_WhenTimeCouldNotBeDetermined)
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetDevice_WhenTimeCouldNotBeDetermined)
     {
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_)).Times(_configuration.TimeProvider_TimeRequest_RetryCount);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(Ge(_configuration.WatchDog_KeepAlive_TimeoutInterval))).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetWatchDog_WhenTimeCouldNotBeDetermined)
+    {
+        ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
+        EXPECT_CALL(_watchDogMock, Reset()).Times(_configuration.TimeProvider_TimeRequest_RetryCount);
 
         _sketchCoupling.Setup();
     }
