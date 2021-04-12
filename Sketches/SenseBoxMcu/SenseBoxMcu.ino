@@ -9,6 +9,8 @@
 #include "SenseboxMcuSketchCoupling.h"
 #include "Winc1500TimeProvider.h"
 #include "arduino_secrets.h"
+#include "WifiManager.h"
+#include "Winc1500WifiConnector.h"
 
 // Reading config
 const char Ssid[] = SECRET_SSID;
@@ -22,6 +24,8 @@ Sketch::SketchConfiguration Configuration = []
     
     c.TimeProvider_TimeRequest_RetryInterval = 1000;
     c.TimeProvider_TimeRequest_RetryCount = 5;
+    c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;
+    c.NetworkProvider_ConnectionRequest_RetryCount = 20;
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
     c.Sensor_Measure_Interval = 60000;
     c.SoundLevelMeter_Measure_Interval = 300;
@@ -46,6 +50,8 @@ Measurement::MeasurementManager SlmMeasurementManager
     1,
     SlmId
 };
+Network::Wifi::Winc1500WifiConnector WifiConnector;
+Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
     SenseBoxIoMapper,
@@ -55,6 +61,7 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     SlMeter,
     MeasurementContainer,
     SlmMeasurementManager,
+    WifiManager,
     Configuration
 };
 

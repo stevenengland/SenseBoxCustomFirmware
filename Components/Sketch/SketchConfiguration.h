@@ -10,6 +10,9 @@ namespace Sketch
         int TimeProvider_TimeRequest_RetryInterval;
         int TimeProvider_TimeRequest_RetryCount;
 
+        int NetworkProvider_ConnectionRequest_RetryInterval;
+        int NetworkProvider_ConnectionRequest_RetryCount;
+
         int WatchDog_KeepAlive_TimeoutInterval;
 
         int Sensor_Measure_Interval;

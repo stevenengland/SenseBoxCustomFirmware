@@ -8,6 +8,7 @@
 #include "ISensor.h"
 #include "IMeasurementManager.h"
 #include "ITimeProvider.h"
+#include "IWifiManager.h"
 #include "SenseBoxIoMapper.h"
 #include "SketchConfiguration.h"
 
@@ -24,6 +25,7 @@ namespace Sketch
             Sensor::ISensor& soundLevelMeter,
             Measurement::IMeasurementContainer& measurementContainer,
             Measurement::IMeasurementManager& slmMeasurementManager,
+            Network::Wifi::IWifiManager& wifiManager,
             SketchConfiguration& configuration)
             : _senseBoxIoMapper(senseBoxIoMapper),
               _watchDog(watchDog),
@@ -32,6 +34,7 @@ namespace Sketch
               _soundLevelMeter(soundLevelMeter),
               _measurementContainer(measurementContainer),
               _slmMeasurementManager(slmMeasurementManager),
+              _wifiManager(wifiManager),
               _configuration(configuration)
               // _soundLevelMeasurementTimer(_elapsedTimeProvider, 300),
               //_generalMeasurementTimer(_elapsedTimeProvider, 60000),
@@ -49,6 +52,7 @@ namespace Sketch
         Sensor::ISensor& _soundLevelMeter;
         Measurement::IMeasurementContainer& _measurementContainer;
         Measurement::IMeasurementManager& _slmMeasurementManager;
+        Network::Wifi::IWifiManager& _wifiManager;
         SketchConfiguration& _configuration;
         Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, _configuration.SoundLevelMeter_Measure_Interval };
         Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
@@ -60,6 +64,7 @@ namespace Sketch
         int _watchDogInterval = _configuration.WatchDog_KeepAlive_TimeoutInterval;
 
         bool CheckTimeProvider(int retryCounter) const;
+        bool CheckWifiConnection(int retryCounter) const;
         void Reset() const;
     };
 }

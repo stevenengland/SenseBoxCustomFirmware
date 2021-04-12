@@ -10,6 +10,12 @@ namespace Sketch
         // Get up all pins
         _senseBoxIoMapper.PowerAll();
 
+        // Check that the network provider is up and running.
+        if (!CheckWifiConnection(_configuration.NetworkProvider_ConnectionRequest_RetryCount))
+        {
+            Reset();
+        }
+
         // Check that the time provider is up and running.
         if (!CheckTimeProvider(_configuration.TimeProvider_TimeRequest_RetryCount))
         {
@@ -55,6 +61,22 @@ namespace Sketch
             }
 
             _elapsedTimeProvider.WaitSync(_configuration.TimeProvider_TimeRequest_RetryInterval);
+            _watchDog.Reset();
+        }
+
+        return false;
+    }
+
+    bool SenseboxMcuSketchCoupling::CheckWifiConnection(const int retryCounter) const
+    {
+        for (auto i = 1; i <= retryCounter; i++)
+        {
+            if (_wifiManager.IsConnected())
+            {
+                return true;
+            }
+
+            _elapsedTimeProvider.WaitSync(_configuration.NetworkProvider_ConnectionRequest_RetryInterval);
             _watchDog.Reset();
         }
 
