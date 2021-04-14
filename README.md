@@ -1,7 +1,13 @@
 # Custom SenseBox Firmware
 
 ## Intro
-This repo contains modularized firmware for the public science project [SenseBox](https://sensebox.de/) that I need for my personal projects.
+This repo contains modularized firmware for the public science project [SenseBox](https://sensebox.de/) that I need for my personal projects. Specifically I wanted a more robust setup which lead me
+to Google Test as a testing framework I wanted to marry to the Arduino sketches. Furthermore my requirements were:
+
+* Measure phenomena multiple times within a second and aggregate them (e.g. so that I have a measurement for every second)
+* Obtain valid timestamps without a RTC module
+* Store these measurements in RAM
+* Bulk upload the measurements every now and then
 
 ## Using an IDE
 The Arduino IDE lacks a lot of features. Therefore all the .ino files in this project are meant to be edited outside of the Arduino IDE. Please refer to guides telling you how to set
