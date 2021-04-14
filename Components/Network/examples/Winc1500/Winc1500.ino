@@ -6,9 +6,10 @@
 
 char Ssid[] = SECRET_SSID;
 char Pass[] = SECRET_PASS;
-Network::Wifi::Winc1500WifiConnector wifiConnector;
-Network::Wifi::WifiManager wifiManager{wifiConnector, Ssid, Pass};
+Network::Wifi::Winc1500WifiConnector WifiConnector;
+Network::Wifi::WifiManager WifiManager{WifiConnector, Ssid, Pass};
 
+// ReSharper disable once CppInconsistentNaming
 void setup()
 {
     senseBoxIO.powerAll();
@@ -18,29 +19,30 @@ void setup()
     while(!Serial); // wait for serial monitor
     Serial.println("WINC1500");
 
-        while (wifiManager.IsConnected() != true) 
+        while (WifiManager.IsConnected() != true) 
         {
             Serial.print("Attempting to connect to WPA SSID: ");
             Serial.println(Ssid);
             // Connect to WPA/WPA2 network:
-            wifiManager.Connect();
+            WifiManager.Connect();
             // wait 10 seconds for connection:
             delay(10000);
         }
         Serial.print("Connected.");   
 }
 
+// ReSharper disable once CppInconsistentNaming
 void loop()
 {
     delay(10000);
-    if (wifiManager.IsConnected() == false)
+    if (WifiManager.IsConnected() == false)
     {
-        while (wifiManager.IsConnected() == false) 
+        while (WifiManager.IsConnected() == false) 
         {
             Serial.print("Attempting to reconnect to WPA SSID: ");
             Serial.println(Ssid);
             // Connect to WPA/WPA2 network:
-            wifiManager.Reconnect();
+            WifiManager.Reconnect();
             // wait 10 seconds for connection:
             delay(10000);
         }
