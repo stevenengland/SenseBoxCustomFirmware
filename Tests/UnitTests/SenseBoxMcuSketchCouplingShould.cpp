@@ -33,10 +33,12 @@ namespace SenseboxMcuSketchCouplingTests
             c.TimeProvider_TimeRequest_RetryCount = 5;
             c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;
             c.NetworkProvider_ConnectionRequest_RetryCount = 20;
+            c.NetworkProvider_ConnectionStatus_CheckInterval = 30000;
             c.WatchDog_KeepAlive_TimeoutInterval = 16000;
             c.MeasurementContainer_Capacity = 1000;
             c.Sensor_Measure_Interval = 60000;
             c.SoundLevelMeter_Measure_Interval = 300;
+            c.SoundLevelMeter_Measure_AggregationInterval = 1;
             c.Osem_Upload_Interval = 300000;
 
             return c;
@@ -55,7 +57,7 @@ namespace SenseboxMcuSketchCouplingTests
         Peripherals::AnalogPortReaderMock _analogPortReaderMock;
         Sensor::SoundLevelMeterMock _soundLevelMeterMock;
         Measurement::MeasurementContainerMock _measurementContainerMock;
-        Measurement::MeasurementManagerMock _measurementManagerMock;
+        Measurement::MeasurementManagerMock _slmMeasurementManagerMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
         CentralUnit::RamInfoReaderMock _ramInfoReaderMock;
         Logging::LoggerMock _loggerMock;
@@ -67,7 +69,7 @@ namespace SenseboxMcuSketchCouplingTests
             _timeProviderMock,
             _soundLevelMeterMock,
             _measurementContainerMock,
-            _measurementManagerMock,
+            _slmMeasurementManagerMock,
             _wifiManagerMock,
             _ramInfoReaderMock,
             _loggerMock,
@@ -75,12 +77,7 @@ namespace SenseboxMcuSketchCouplingTests
         };
     };
 
-    TEST_F(SenseboxMcuSketchCouplingShould, BringUpAllPins_WhenSetupIsCalled)
-    {
-        EXPECT_CALL(_senseBoxIoMapperMock, PowerAll()).Times(1);
-
-        _sketchCoupling.Setup();
-    }
+#pragma region Keepalive
 
     TEST_F(SenseboxMcuSketchCouplingShould, EnableWatchDog_WhenSetupEnds)
     {
@@ -98,7 +95,7 @@ namespace SenseboxMcuSketchCouplingTests
         _sketchCoupling.Loop();
     }
 
-    TEST_F(SenseboxMcuSketchCouplingShould, ResetDevice_WhenNetworkCouldNotBeEstablished)
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetDevice_WhenNetworkCouldNotBeEstablishedDuringSetup)
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(false));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(1));
@@ -108,7 +105,7 @@ namespace SenseboxMcuSketchCouplingTests
         _sketchCoupling.Setup();
     }
 
-    TEST_F(SenseboxMcuSketchCouplingShould, ResetWatchDog_WhenNetworkCouldNotBeEstablished)
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetWatchDog_WhenNetworkCouldNotBeEstablishedDuringSetup)
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(false));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(1));
@@ -117,7 +114,7 @@ namespace SenseboxMcuSketchCouplingTests
         _sketchCoupling.Setup();
     }
 
-    TEST_F(SenseboxMcuSketchCouplingShould, ResetDevice_WhenTimeCouldNotBeDetermined)
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetDevice_WhenTimeCouldNotBeDeterminedDuringSetup)
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(true));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
@@ -127,7 +124,7 @@ namespace SenseboxMcuSketchCouplingTests
         _sketchCoupling.Setup();
     }
 
-    TEST_F(SenseboxMcuSketchCouplingShould, ResetWatchDog_WhenTimeCouldNotBeDetermined)
+    TEST_F(SenseboxMcuSketchCouplingShould, ResetWatchDog_WhenTimeCouldNotBeDeterminedDuringSetup)
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(true));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
@@ -135,4 +132,59 @@ namespace SenseboxMcuSketchCouplingTests
 
         _sketchCoupling.Setup();
     }
+
+#pragma endregion Keepalive
+
+#pragma region Peripherals
+
+    TEST_F(SenseboxMcuSketchCouplingShould, BringUpAllPins_WhenSetupIsCalled)
+    {
+        EXPECT_CALL(_senseBoxIoMapperMock, PowerAll()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+#pragma endregion Peripherals
+
+#pragma region Network
+
+    TEST_F(SenseboxMcuSketchCouplingShould, TurnOnWifi_DuringSetup)
+    {
+        EXPECT_CALL(_wifiManagerMock, Connect()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, CheckWifiAndReconnect_WhenIntervalElapsedDuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.NetworkProvider_ConnectionStatus_CheckInterval + 1));
+        EXPECT_CALL(_wifiManagerMock, IsConnected()).WillOnce(Return(false));
+        EXPECT_CALL(_wifiManagerMock, Reconnect()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, CheckWifi_WhenIntervalElapsedDuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.NetworkProvider_ConnectionStatus_CheckInterval + 1));
+        EXPECT_CALL(_wifiManagerMock, IsConnected()).WillOnce(Return(true));
+        EXPECT_CALL(_wifiManagerMock, Reconnect()).Times(0);
+
+        _sketchCoupling.Loop();
+    }
+
+#pragma endregion Network
+
+#pragma region Measurement
+
+    TEST_F(SenseboxMcuSketchCouplingShould, RecordSound_WhenIntervalElapsedDuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.SoundLevelMeter_Measure_Interval + 1));
+        EXPECT_CALL(_slmMeasurementManagerMock, Record(_,_)).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+#pragma endregion Measurement
+
 }
