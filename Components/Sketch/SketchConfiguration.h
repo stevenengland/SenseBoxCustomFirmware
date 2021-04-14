@@ -14,6 +14,7 @@ namespace Sketch
 
         int NetworkProvider_ConnectionRequest_RetryInterval;
         int NetworkProvider_ConnectionRequest_RetryCount;
+        int NetworkProvider_ConnectionStatus_CheckInterval;
 
         int WatchDog_KeepAlive_TimeoutInterval;
 
@@ -22,6 +23,7 @@ namespace Sketch
         int Sensor_Measure_Interval;
 
         int SoundLevelMeter_Measure_Interval;
+        int SoundLevelMeter_Measure_AggregationInterval;
 
         int Osem_Upload_Interval;
     } SketchConfiguration;

@@ -30,10 +30,12 @@ Sketch::SketchConfiguration Configuration = []
     c.TimeProvider_TimeRequest_RetryCount = 5;
     c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;
     c.NetworkProvider_ConnectionRequest_RetryCount = 20;
+    c.NetworkProvider_ConnectionStatus_CheckInterval = 30000;
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
     c.MeasurementContainer_Capacity = 1000;
     c.Sensor_Measure_Interval = 60000;
     c.SoundLevelMeter_Measure_Interval = 300;
+    c.SoundLevelMeter_Measure_AggregationInterval = 1;
     c.Osem_Upload_Interval = 300000;
 
     return c;
@@ -52,7 +54,7 @@ Measurement::MeasurementManager SlmMeasurementManager
 {
     MeasurementContainer,
     AggregationStrategy,
-    1,
+    Configuration.SoundLevelMeter_Measure_AggregationInterval,
     SlmId
 };
 Network::Wifi::Winc1500WifiConnector WifiConnector;
@@ -76,6 +78,7 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
 
 // ReSharper disable once CppInconsistentNaming
 void setup() {
+    Serial.begin(115200);
     SketchCoupling.Setup();
 }
 

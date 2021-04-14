@@ -65,6 +65,7 @@ namespace Sketch
         Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, _configuration.SoundLevelMeter_Measure_Interval };
         Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
         Time::Timer _uploadToOsemTimer{ _elapsedTimeProvider, _configuration.Osem_Upload_Interval };
+        Time::Timer _checkAndReconnectWifiTimer{ _elapsedTimeProvider, _configuration.NetworkProvider_ConnectionStatus_CheckInterval };
         //Time::Timer _soundLevelMeasurementTimer;
         //Time::Timer _generalMeasurementTimer;
         //Time::Timer _uploadToOsemTimer;
