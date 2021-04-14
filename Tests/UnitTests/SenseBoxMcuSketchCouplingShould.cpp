@@ -5,6 +5,7 @@
 #include "ElapsedTimeProviderMock.hpp"
 #include "gmock-matchers.h"
 #include "gmock-spec-builders.h"
+#include "LoggerMock.hpp"
 #include "MeasurementContainerMock.hpp"
 #include "MeasurementManagerMock.hpp"
 #include "SenseBoxIoMapperMock.hpp"
@@ -13,6 +14,8 @@
 #include "SoundLevelMeterMock.hpp"
 #include "TimeProviderMock.hpp"
 #include "WifiManagerMock.hpp"
+#include "LogLevel.h"
+#include "RamInfoReaderMock.hpp"
 
 using namespace testing;
 
@@ -24,12 +27,14 @@ namespace SenseboxMcuSketchCouplingTests
         Sketch::SketchConfiguration _configuration = []
         {
             Sketch::SketchConfiguration c{};
-            
+
+            c.Logger_LogLevel = LogLevelVerbose;
             c.TimeProvider_TimeRequest_RetryInterval = 1000;
             c.TimeProvider_TimeRequest_RetryCount = 5;
             c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;
             c.NetworkProvider_ConnectionRequest_RetryCount = 20;
             c.WatchDog_KeepAlive_TimeoutInterval = 16000;
+            c.MeasurementContainer_Capacity = 1000;
             c.Sensor_Measure_Interval = 60000;
             c.SoundLevelMeter_Measure_Interval = 300;
             c.Osem_Upload_Interval = 300000;
@@ -52,6 +57,8 @@ namespace SenseboxMcuSketchCouplingTests
         Measurement::MeasurementContainerMock _measurementContainerMock;
         Measurement::MeasurementManagerMock _measurementManagerMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
+        CentralUnit::RamInfoReaderMock _ramInfoReaderMock;
+        Logging::LoggerMock _loggerMock;
         Sketch::SenseboxMcuSketchCoupling _sketchCoupling
         {
             _senseBoxIoMapperMock,
@@ -62,6 +69,8 @@ namespace SenseboxMcuSketchCouplingTests
             _measurementContainerMock,
             _measurementManagerMock,
             _wifiManagerMock,
+            _ramInfoReaderMock,
+            _loggerMock,
             _configuration
         };
     };

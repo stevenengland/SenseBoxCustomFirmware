@@ -11,6 +11,9 @@
 #include "arduino_secrets.h"
 #include "WifiManager.h"
 #include "Winc1500WifiConnector.h"
+#include "LogLevel.h"
+#include "RamInfoReader.h"
+#include "SerialLogger.h"
 
 // Reading config
 const char Ssid[] = SECRET_SSID;
@@ -21,12 +24,14 @@ const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID;
 Sketch::SketchConfiguration Configuration = []
 {
     Sketch::SketchConfiguration c{};
-    
+
+    c.Logger_LogLevel = LogLevelVerbose;
     c.TimeProvider_TimeRequest_RetryInterval = 1000;
     c.TimeProvider_TimeRequest_RetryCount = 5;
     c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;
     c.NetworkProvider_ConnectionRequest_RetryCount = 20;
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
+    c.MeasurementContainer_Capacity = 1000;
     c.Sensor_Measure_Interval = 60000;
     c.SoundLevelMeter_Measure_Interval = 300;
     c.Osem_Upload_Interval = 300000;
@@ -42,7 +47,7 @@ Time::Winc1500TimeProvider TimeProvider;
 Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
 Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
 Measurement::MaximumStrategy AggregationStrategy;
-Measurement::MeasurementContainer MeasurementContainer{1000};
+Measurement::MeasurementContainer MeasurementContainer{Configuration.MeasurementContainer_Capacity};
 Measurement::MeasurementManager SlmMeasurementManager
 {
     MeasurementContainer,
@@ -52,6 +57,8 @@ Measurement::MeasurementManager SlmMeasurementManager
 };
 Network::Wifi::Winc1500WifiConnector WifiConnector;
 Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
+CentralUnit::RamInfoReader RamInfoReader;
+Logging::SerialLogger Logger{Configuration.Logger_LogLevel};
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
     SenseBoxIoMapper,
@@ -62,6 +69,8 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     MeasurementContainer,
     SlmMeasurementManager,
     WifiManager,
+    RamInfoReader,
+    Logger,
     Configuration
 };
 

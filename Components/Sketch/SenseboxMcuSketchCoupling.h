@@ -11,6 +11,8 @@
 #include "IWifiManager.h"
 #include "SenseBoxIoMapper.h"
 #include "SketchConfiguration.h"
+#include "IRamInfoReader.h"
+#include "ILogger.h"
 
 namespace Sketch
 {
@@ -26,6 +28,8 @@ namespace Sketch
             Measurement::IMeasurementContainer& measurementContainer,
             Measurement::IMeasurementManager& slmMeasurementManager,
             Network::Wifi::IWifiManager& wifiManager,
+            CentralUnit::IRamInfoReader& ramInfoReader,
+            Logging::ILogger& logger,
             SketchConfiguration& configuration)
             : _senseBoxIoMapper(senseBoxIoMapper),
               _watchDog(watchDog),
@@ -35,10 +39,12 @@ namespace Sketch
               _measurementContainer(measurementContainer),
               _slmMeasurementManager(slmMeasurementManager),
               _wifiManager(wifiManager),
+              _ramInfoReader(ramInfoReader),
+              _logger(logger),
               _configuration(configuration)
-              // _soundLevelMeasurementTimer(_elapsedTimeProvider, 300),
-              //_generalMeasurementTimer(_elapsedTimeProvider, 60000),
-              //_uploadToOsemTimer(_elapsedTimeProvider, 300000)
+        // _soundLevelMeasurementTimer(_elapsedTimeProvider, 300),
+        //_generalMeasurementTimer(_elapsedTimeProvider, 60000),
+        //_uploadToOsemTimer(_elapsedTimeProvider, 300000)
         {
         }
 
@@ -53,6 +59,8 @@ namespace Sketch
         Measurement::IMeasurementContainer& _measurementContainer;
         Measurement::IMeasurementManager& _slmMeasurementManager;
         Network::Wifi::IWifiManager& _wifiManager;
+        CentralUnit::IRamInfoReader& _ramInfoReader;
+        Logging::ILogger& _logger;
         SketchConfiguration& _configuration;
         Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, _configuration.SoundLevelMeter_Measure_Interval };
         Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
