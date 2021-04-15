@@ -16,6 +16,7 @@ namespace Logging
             :
             _logLevel(logLevel)
         {
+            Serial.begin(115200);
         }
         void Fatal(const char* format, ...) override;
         void Error(const char* format, ...) override;
