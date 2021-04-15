@@ -66,6 +66,7 @@ namespace Sketch
         Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
         Time::Timer _uploadToOsemTimer{ _elapsedTimeProvider, _configuration.Osem_Upload_Interval };
         Time::Timer _checkAndReconnectWifiTimer{ _elapsedTimeProvider, _configuration.NetworkProvider_ConnectionStatus_CheckInterval };
+        Time::Timer _healthCheckTimer{ _elapsedTimeProvider, _configuration.HealthCheck_Interval };
         //Time::Timer _soundLevelMeasurementTimer;
         //Time::Timer _generalMeasurementTimer;
         //Time::Timer _uploadToOsemTimer;
@@ -75,5 +76,6 @@ namespace Sketch
         bool CheckTimeProvider(int retryCounter) const;
         bool CheckWifiConnection(int retryCounter) const;
         void Reset() const;
+        void HealthCheck() const;
     };
 }

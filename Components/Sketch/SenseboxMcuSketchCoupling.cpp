@@ -36,6 +36,8 @@ namespace Sketch
         _watchDog.Enable(_configuration.WatchDog_KeepAlive_TimeoutInterval);
 
         _logger.Notice("Device successfully started\n");
+
+        HealthCheck();
     }
 
     void SenseboxMcuSketchCoupling::Loop()
@@ -66,6 +68,12 @@ namespace Sketch
             // Upload to OSeM
 
             _measurementContainer.ClearMeasurements(); // ToDo: Only if upload was successful
+        }
+
+        if (_healthCheckTimer.HasIntervalElapsed())
+        {
+            // How is it going, Ardu bro?
+            HealthCheck();
         }
 
         // Watch the dog ;)
@@ -117,5 +125,14 @@ namespace Sketch
     {
         _logger.Fatal("Resetting device\n");
         _elapsedTimeProvider.WaitSync(_watchDogInterval * 2);
+    }
+
+    void SenseboxMcuSketchCoupling::HealthCheck() const
+    {
+        _logger.Notice("> --- Health check: ---\n");
+        _logger.Notice("> Current timestamp: %d\n", _timeProvider.GetEpochTime());
+        _logger.Notice("> Network connected: %d\n", (_wifiManager.IsConnected() ? 1 : 0));
+        _logger.Notice("> Measurement container fill level: %d\n", _measurementContainer.Count());
+        _logger.Notice("> Free SRAM: %d\n", _ramInfoReader.GetFreeRamSize());
     }
 }

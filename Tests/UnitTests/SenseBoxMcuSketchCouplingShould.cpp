@@ -40,6 +40,7 @@ namespace SenseboxMcuSketchCouplingTests
             c.SoundLevelMeter_Measure_Interval = 300;
             c.SoundLevelMeter_Measure_AggregationInterval = 1;
             c.Osem_Upload_Interval = 300000;
+            c.HealthCheck_Interval = 360000;
 
             return c;
         }();

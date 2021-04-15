@@ -26,5 +26,7 @@ namespace Sketch
         int SoundLevelMeter_Measure_AggregationInterval;
 
         int Osem_Upload_Interval;
+
+        int HealthCheck_Interval;
     } SketchConfiguration;
 }
