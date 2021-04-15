@@ -5,6 +5,14 @@
 
 namespace Logging
 {
+    void Winc1500TelnetLogger::Begin()
+    {
+        if (!_server.available() && WiFi.status() == WL_CONNECTED)
+        {
+            _server.begin();
+        }
+    }
+
     void Winc1500TelnetLogger::Fatal(const char* format, ...)
     {
         va_list argumentPointer;

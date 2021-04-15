@@ -16,11 +16,10 @@ namespace Logging
     public:
         explicit Winc1500TelnetLogger(const int logLevel)
             :
-            _logLevel(logLevel),
-            _server(23)
+            _logLevel(logLevel)
         {
-            _server.begin();
         }
+        void Begin() override;
         void Fatal(const char* format, ...) override;
         void Error(const char* format, ...) override;
         void Warning(const char* format, ...) override;
@@ -29,8 +28,8 @@ namespace Logging
         void Verbose(const char* format, ...) override;
     private:
         int _logLevel = 0;
-        WiFiServer _server;
-        WiFiClient _client;
+        WiFiServer _server{ 23 };
+        WiFiClient _client{};
 
         void Log(const char* format, int logLevel, const char* prefix, va_list argumentPointer);
         void StreamPrintProgramMemory(Print& out, PGM_P format, ...)

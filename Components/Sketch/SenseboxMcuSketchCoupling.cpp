@@ -61,6 +61,8 @@ namespace Sketch
             // Periodic check for a WiFi connection
             if (!_wifiManager.IsConnected())
             {
+                _logger.Notice("Network connection lost, reconnecting\n");
+
                 _wifiManager.Reconnect();
             }
         }
@@ -68,6 +70,7 @@ namespace Sketch
         if (_uploadToOsemTimer.HasIntervalElapsed())
         {
             // Upload to OSeM
+            _logger.Notice("Starting upload to OSeM\n");
 
             _measurementContainer.ClearMeasurements(); // ToDo: Only if upload was successful
         }

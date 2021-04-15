@@ -38,7 +38,7 @@ Sketch::SketchConfiguration Configuration = []
     c.SoundLevelMeter_Measure_Interval = 300;
     c.SoundLevelMeter_Measure_AggregationInterval = 1;
     c.Osem_Upload_Interval = 300000;
-    c.HealthCheck_Interval = 360000;
+    c.HealthCheck_Interval = 600000;
 
     return c;
 }();
@@ -62,8 +62,8 @@ Measurement::MeasurementManager SlmMeasurementManager
 Network::Wifi::Winc1500WifiConnector WifiConnector;
 Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
 CentralUnit::RamInfoReader RamInfoReader;
-Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
-//Logging::Winc1500TelnetLogger Logger{Configuration.Logger_LogLevel};
+//Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
+Logging::Winc1500TelnetLogger Logger{Configuration.Logger_LogLevel};
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
     SenseBoxIoMapper,
