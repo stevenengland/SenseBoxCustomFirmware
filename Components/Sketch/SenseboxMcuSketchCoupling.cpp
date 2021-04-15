@@ -4,6 +4,8 @@ namespace Sketch
 {
     void SenseboxMcuSketchCoupling::Setup()
     {
+        _logger.Begin();
+
         _logger.Notice("Starting device\n");
 
         // Disable WatchDog until setup is done.
@@ -129,6 +131,7 @@ namespace Sketch
 
     void SenseboxMcuSketchCoupling::HealthCheck() const
     {
+        _logger.Begin();
         _logger.Notice("> --- Health check: ---\n");
         _logger.Notice("> Current timestamp: %d\n", _timeProvider.GetEpochTime());
         _logger.Notice("> Network connected: %d\n", (_wifiManager.IsConnected() ? 1 : 0));

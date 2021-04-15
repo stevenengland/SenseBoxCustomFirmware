@@ -14,6 +14,7 @@
 #include "LogLevel.h"
 #include "RamInfoReader.h"
 #include "SerialLogger.h"
+#include "Winc1500TelnetLogger.h"
 
 // Reading config
 const char Ssid[] = SECRET_SSID;
@@ -61,7 +62,8 @@ Measurement::MeasurementManager SlmMeasurementManager
 Network::Wifi::Winc1500WifiConnector WifiConnector;
 Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
 CentralUnit::RamInfoReader RamInfoReader;
-Logging::SerialLogger Logger{Configuration.Logger_LogLevel};
+Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
+//Logging::Winc1500TelnetLogger Logger{Configuration.Logger_LogLevel};
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
     SenseBoxIoMapper,

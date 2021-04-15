@@ -100,7 +100,8 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(false));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(1));
-        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_)).Times(_configuration.NetworkProvider_ConnectionRequest_RetryCount);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(5000)).Times(1);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_configuration.NetworkProvider_ConnectionRequest_RetryInterval)).Times(_configuration.NetworkProvider_ConnectionRequest_RetryCount);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(Ge(_configuration.WatchDog_KeepAlive_TimeoutInterval))).Times(1);
 
         _sketchCoupling.Setup();
@@ -119,7 +120,8 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(true));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
-        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_)).Times(_configuration.TimeProvider_TimeRequest_RetryCount);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(5000)).Times(1);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_configuration.TimeProvider_TimeRequest_RetryInterval)).Times(_configuration.TimeProvider_TimeRequest_RetryCount);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(Ge(_configuration.WatchDog_KeepAlive_TimeoutInterval))).Times(1);
 
         _sketchCoupling.Setup();
@@ -175,6 +177,25 @@ namespace SenseboxMcuSketchCouplingTests
     }
 
 #pragma endregion Network
+
+#pragma region Logging
+
+    TEST_F(SenseboxMcuSketchCouplingShould, StartLogging_DuringSetup)
+    {
+        EXPECT_CALL(_loggerMock, Begin()).Times(2); // Initial start and health check at the end of setup
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, RestartLogging_DuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.HealthCheck_Interval + 1));
+        EXPECT_CALL(_loggerMock, Begin()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+#pragma endregion Logging
 
 #pragma region Measurement
 

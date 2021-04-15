@@ -15,5 +15,6 @@ namespace Logging
         void Notice(const char* format, ...) override { printf(format); };
         void Trace(const char* format, ...) override { printf(format); };
         void Verbose(const char* format, ...) override { printf(format); };
+        MOCK_METHOD(void, Begin, (), (override));
     };
 }

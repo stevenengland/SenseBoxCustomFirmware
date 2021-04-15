@@ -1,16 +1,11 @@
 #include "Arduino.h"
-#include "SerialLogger.h"
+#include "Winc1500TelnetLogger.h"
+
 #include "LogLevel.h"
-#include <stdarg.h>
 
 namespace Logging
 {
-    void SerialLogger::Begin()
-    {
-        Serial.begin(115200);
-    }
-
-    void SerialLogger::Fatal(const char* format, ...)
+    void Winc1500TelnetLogger::Fatal(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -18,7 +13,7 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Error(const char* format, ...)
+    void Winc1500TelnetLogger::Error(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -26,7 +21,7 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Warning(const char* format, ...)
+    void Winc1500TelnetLogger::Warning(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -34,7 +29,7 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Notice(const char* format, ...)
+    void Winc1500TelnetLogger::Notice(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -42,7 +37,7 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Trace(const char* format, ...)
+    void Winc1500TelnetLogger::Trace(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -50,7 +45,7 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Verbose(const char* format, ...)
+    void Winc1500TelnetLogger::Verbose(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
@@ -58,14 +53,21 @@ namespace Logging
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Log(const char* format, int logLevel, const char* prefix, va_list argumentPointer)
+    void Winc1500TelnetLogger::Log(const char* format, int logLevel, const char* prefix, va_list argumentPointer)
     {
         if (logLevel > _logLevel)
         {
             return;
         }
-        StreamPrintProgramMemory(Serial, PSTR("%s - "), prefix);
-        StreamPrintProgramMemory(Serial, PSTR(format), argumentPointer);
+
+        _client = _server.available();
+        if (!_client)
+        {
+            return;
+        }
+
+        StreamPrintProgramMemory(_server, PSTR("%s - "), prefix);
+        StreamPrintProgramMemory(_server, PSTR(format), argumentPointer);
     }
 
 }

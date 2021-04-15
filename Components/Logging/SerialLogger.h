@@ -2,10 +2,10 @@
 
 #include <cstdio>
 #include <cstring>
-#include <stdarg.h>
+
 #include "Arduino.h"
 #include "ILogger.h"
-#include "LogLevel.h"
+#include <stdarg.h>
 
 namespace Logging
 {
@@ -18,6 +18,7 @@ namespace Logging
         {
             Serial.begin(115200);
         }
+        void Begin() override;
         void Fatal(const char* format, ...) override;
         void Error(const char* format, ...) override;
         void Warning(const char* format, ...) override;
