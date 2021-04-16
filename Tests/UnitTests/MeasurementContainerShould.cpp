@@ -28,7 +28,7 @@ namespace MeasurementContainerTests
     {
         Measurement::Measurement measurement;
 
-        ASSERT_FALSE(_container.GetMeasurement(1, measurement));
+        ASSERT_FALSE(_container.GetMeasurement(0, measurement));
     }
 
     TEST_F(MeasurementContainerShould, ReturnFalse_IfIndexOfSearchedMeasurementIsTooBig) 
@@ -38,7 +38,7 @@ namespace MeasurementContainerTests
 
         _container.AddMeasurement(measurementToAdd);
 
-        ASSERT_FALSE(_container.GetMeasurement(2, measurementToGet));
+        ASSERT_FALSE(_container.GetMeasurement(1, measurementToGet));
     }
 
     TEST_F(MeasurementContainerShould, ReturnCountGt0_WhenMeasurementWasAdded) 

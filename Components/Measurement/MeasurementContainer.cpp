@@ -19,7 +19,7 @@ namespace Measurement
 
     bool MeasurementContainer::GetMeasurement(const int index, Measurement& measurement)
     {
-        if (_currentItemIndex == 0 || index < 0 || static_cast<int>(_currentItemIndex) < index)
+        if (_currentItemIndex == 0 || index < 0 || static_cast<int>(_currentItemIndex - 1) < index)
         {
             return false;
         }
