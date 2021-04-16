@@ -5,3 +5,4 @@ build
 .vs
 /Configurations/arduino.ini
 **/arduino_secrets.h
+/Sketches/Playground/Playground.ino
