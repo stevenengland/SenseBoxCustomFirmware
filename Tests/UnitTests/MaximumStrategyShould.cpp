@@ -11,14 +11,36 @@ namespace MeasurementAggregationStrategyTests
         Measurement::MaximumStrategy _strategy;
     };
 
+    TEST_F(MaximumStrategyShould, ReturnCorrectMax_WhenCalledTheFirstTime)
+    {
+        float currentAggregate = 0;
+
+        currentAggregate = _strategy.Aggregate(2);
+
+        ASSERT_FLOAT_EQ(currentAggregate, 2);
+    }
+
     TEST_F(MaximumStrategyShould, ReturnCorrectMax_GivenMultipleValuesWithoutOrdering)
     {
         float currentAggregate = 0;
 
-        currentAggregate = _strategy.Aggregate(currentAggregate, 2);
-        currentAggregate = _strategy.Aggregate(currentAggregate, 6);
-        currentAggregate = _strategy.Aggregate(currentAggregate, 3);
+        currentAggregate = _strategy.Aggregate(2);
+        currentAggregate = _strategy.Aggregate(6);
+        currentAggregate = _strategy.Aggregate(3);
 
         ASSERT_FLOAT_EQ(currentAggregate, 6);
+    }
+
+    TEST_F(MaximumStrategyShould, ReturnCorrectMax_WhenFirstCalledAfterReset)
+    {
+        float currentAggregate = 0;
+
+        currentAggregate = _strategy.Aggregate(3);
+        currentAggregate = _strategy.Aggregate(6);
+        currentAggregate = _strategy.Aggregate(4);
+        _strategy.Reset();
+        currentAggregate = _strategy.Aggregate(2);
+
+        ASSERT_FLOAT_EQ(currentAggregate, 2);
     }
 }

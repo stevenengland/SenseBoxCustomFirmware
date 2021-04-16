@@ -1,11 +1,11 @@
 #pragma once
-#include "MeasurementContainer.h"
+#include "IMeasurementContainer.h"
 
 namespace Measurement
 {
     class IMeasurementUploader
     {
     public:
-        bool TryUpload(MeasurementContainer& container);
+        bool TryUpload(IMeasurementContainer& container);
     };
 }

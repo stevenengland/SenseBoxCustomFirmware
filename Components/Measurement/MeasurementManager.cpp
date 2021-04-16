@@ -16,9 +16,11 @@ namespace Measurement
             _container.AddMeasurement(measurement);
 
             _intervalStart = measurementTime;
+
+            _aggregationStrategy.Reset();
         }
 
-        _intervalAggregate = _aggregationStrategy.Aggregate(_intervalAggregate, value);
+        _intervalAggregate = _aggregationStrategy.Aggregate(value);
     }
 
     void MeasurementManager::SetInterval(const time_t interval)

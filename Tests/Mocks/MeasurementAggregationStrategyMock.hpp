@@ -9,6 +9,7 @@ namespace Measurement
     class MeasurementAggregationStrategyMock final : public IMeasurementAggregationStrategy
     {
     public:
-        MOCK_METHOD(float, Aggregate, (float currentAggregate, float nextValue), (override));
+        MOCK_METHOD(float, Aggregate, (float nextValue), (override));
+        MOCK_METHOD(void, Reset, (), (override));
     };
 }

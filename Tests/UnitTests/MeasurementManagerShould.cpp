@@ -84,11 +84,8 @@ namespace MeasurementManagerTests
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(1)
             .WillOnce(SaveArg<0>(&measurment));
-        //EXPECT_CALL(_timeConverter, GetUtcTime(_, _))
-        //    .Times(1)
-        ////.WillOnce(SetArgPointee<1>(ByRef(dateString)));
-        //.WillOnce(SetArrayArgument<1>(dateString, dateString + strlen(dateString) + 1));
-        EXPECT_CALL(_aggregationStrategy, Aggregate(_,_))
+
+        EXPECT_CALL(_aggregationStrategy, Aggregate(_))
             .Times(3)
             .WillOnce(Return(3.0f))
             .WillOnce(Return(2.0f)) // This one is returned
@@ -101,5 +98,66 @@ namespace MeasurementManagerTests
         ASSERT_STREQ("TestSensor", measurment.SensorId);
         ASSERT_EQ(101, measurment.Timestamp);
         ASSERT_FLOAT_EQ(2.0f, measurment.Value);
+    }
+
+    TEST_F(MeasurementManagerShould, AddSpecificMeasurementsToContainer_WhenIntervalElapsedMultipleTimes)
+    {
+        _manager.SetInterval(1);
+        Measurement::Measurement measurment1{};
+        Measurement::Measurement measurment2{};
+        Measurement::Measurement measurment3{};
+
+        EXPECT_CALL(_container, AddMeasurement(_))
+            .Times(3)
+            .WillOnce(SaveArg<0>(&measurment1))
+            .WillOnce(SaveArg<0>(&measurment2))
+            .WillOnce(SaveArg<0>(&measurment3));
+        
+        EXPECT_CALL(_aggregationStrategy, Aggregate(_))
+            .Times(10)
+            .WillOnce(Return(5.0f))
+            .WillOnce(Return(6.0f))
+            .WillOnce(Return(4.0f)) //<- That one is last and therefore highest value before new interval begins...
+            .WillOnce(Return(8.0f))
+            .WillOnce(Return(9.0f))
+            .WillOnce(Return(7.0f)) //<- That one is last and therefore highest value before new interval begins...
+            .WillOnce(Return(2.0f))
+            .WillOnce(Return(3.0f))
+            .WillOnce(Return(1.0f)) //<- That one is last and therefore highest value before new interval begins...
+            .WillOnce(Return(7.0f));
+
+        _manager.Record(1, 100);
+        _manager.Record(1, 100);
+        _manager.Record(1, 100);
+        _manager.Record(1, 101);
+        _manager.Record(1, 101);
+        _manager.Record(1, 101);
+        _manager.Record(1, 102);
+        _manager.Record(1, 102);
+        _manager.Record(1, 102);
+        _manager.Record(1, 103);
+
+        ASSERT_STREQ("TestSensor", measurment1.SensorId);
+        ASSERT_EQ(100, measurment1.Timestamp);
+        ASSERT_FLOAT_EQ(4.0f, measurment1.Value);
+        ASSERT_STREQ("TestSensor", measurment2.SensorId);
+        ASSERT_EQ(101, measurment2.Timestamp);
+        ASSERT_FLOAT_EQ(7.0f, measurment2.Value);
+        ASSERT_STREQ("TestSensor", measurment3.SensorId);
+        ASSERT_EQ(102, measurment3.Timestamp);
+        ASSERT_FLOAT_EQ(1.0f, measurment3.Value);
+    }
+
+    TEST_F(MeasurementManagerShould, ResetAggregationStrategy_IfNewIntervalBegins)
+    {
+        EXPECT_CALL(_aggregationStrategy, Reset())
+            .Times(3);
+
+        _manager.SetInterval(1);
+
+        _manager.Record(3, 101);
+        _manager.Record(1, 102);
+        _manager.Record(4, 103);
+        _manager.Record(4, 104);
     }
 }
