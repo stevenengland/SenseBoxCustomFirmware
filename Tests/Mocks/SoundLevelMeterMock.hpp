@@ -9,5 +9,6 @@ namespace Sensor
     {
     public:
         MOCK_METHOD(float, ReadValue, (), (override));
+        MOCK_METHOD(bool, Init, (), (override));
     };
 }

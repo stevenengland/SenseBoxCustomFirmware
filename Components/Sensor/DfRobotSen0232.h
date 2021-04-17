@@ -14,7 +14,7 @@ namespace Sensor
         );
 
         float ReadValue() override;
-
+        bool Init() override;
     private:
         Peripherals::IAnalogPortReader& _portReader;
         int _soundSensorPin;

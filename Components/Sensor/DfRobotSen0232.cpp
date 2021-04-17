@@ -11,6 +11,11 @@ namespace Sensor
     {
     }
 
+    bool DfRobotSen0232::Init()
+    {
+        return true;
+    }
+
     float DfRobotSen0232::ReadValue()
     {
         const auto voltage = _portReader.ReadVoltageFromPin(_soundSensorPin) / 1024.0f * 3.3f;
