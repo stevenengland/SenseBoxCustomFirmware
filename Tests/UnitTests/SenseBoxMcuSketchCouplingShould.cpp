@@ -7,7 +7,7 @@
 #include "gmock-spec-builders.h"
 #include "LoggerMock.hpp"
 #include "MeasurementContainerMock.hpp"
-#include "MeasurementManagerMock.hpp"
+#include "MeasurementRecorderMock.hpp"
 #include "SenseBoxIoMapperMock.hpp"
 #include "WatchDogMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
@@ -58,7 +58,7 @@ namespace SenseboxMcuSketchCouplingTests
         Peripherals::AnalogPortReaderMock _analogPortReaderMock;
         Sensor::SoundLevelMeterMock _soundLevelMeterMock;
         Measurement::MeasurementContainerMock _measurementContainerMock;
-        Measurement::MeasurementManagerMock _slmMeasurementManagerMock;
+        Measurement::MeasurementRecorderMock _slmMeasurementRecorderMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
         CentralUnit::RamInfoReaderMock _ramInfoReaderMock;
         Logging::LoggerMock _loggerMock;
@@ -70,7 +70,7 @@ namespace SenseboxMcuSketchCouplingTests
             _timeProviderMock,
             _soundLevelMeterMock,
             _measurementContainerMock,
-            _slmMeasurementManagerMock,
+            _slmMeasurementRecorderMock,
             _wifiManagerMock,
             _ramInfoReaderMock,
             _loggerMock,
@@ -202,7 +202,7 @@ namespace SenseboxMcuSketchCouplingTests
     TEST_F(SenseboxMcuSketchCouplingShould, RecordSound_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.SoundLevelMeter_Measure_Interval + 1));
-        EXPECT_CALL(_slmMeasurementManagerMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_slmMeasurementRecorderMock, Record(_,_)).Times(1);
 
         _sketchCoupling.Loop();
     }

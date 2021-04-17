@@ -50,7 +50,7 @@ namespace Sketch
             // Measure Sound Level
             const auto value = _soundLevelMeter.ReadValue();
             const auto timestamp = _timeProvider.GetEpochTime();
-            _slmMeasurementManager.Record(value, timestamp);
+            _slmMeasurementRecorder.Record(value, timestamp);
 
             LogContainerDelta();
         }

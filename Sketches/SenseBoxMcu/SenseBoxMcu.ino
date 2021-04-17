@@ -4,7 +4,7 @@
 #include "DfRobotSen0232.h"
 #include "MaximumStrategy.h"
 #include "MeasurementContainer.h"
-#include "MeasurementManager.h"
+#include "MeasurementRecorder.h"
 #include "SenseBoxAnalogPortReader.h"
 #include "SenseboxMcuSketchCoupling.h"
 #include "Winc1500TimeProvider.h"
@@ -52,7 +52,7 @@ Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
 Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
 Measurement::MaximumStrategy AggregationStrategy;
 Measurement::MeasurementContainer MeasurementContainer{Configuration.MeasurementContainer_Capacity};
-Measurement::MeasurementManager SlmMeasurementManager
+Measurement::MeasurementRecorder SlmMeasurementRecorder
 {
     MeasurementContainer,
     AggregationStrategy,
@@ -72,7 +72,7 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     TimeProvider,
     SlMeter,
     MeasurementContainer,
-    SlmMeasurementManager,
+    SlmMeasurementRecorder,
     WifiManager,
     RamInfoReader,
     Logger,

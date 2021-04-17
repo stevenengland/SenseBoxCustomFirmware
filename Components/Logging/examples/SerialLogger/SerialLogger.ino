@@ -14,6 +14,11 @@ void setup() {
     Logger.Warning("Warning: Rain is coming.\n");
 
     Logger.Notice("Should not be printed out...");
+
+    Logger.FatalP("That went wrong: %d - %s\n", 25, "specific error");
+    Logger.WarningP("Warning: Rain is coming.\n");
+
+    Logger.NoticeP("Should not be printed out...");
 }
 
 // ReSharper disable once CppInconsistentNaming

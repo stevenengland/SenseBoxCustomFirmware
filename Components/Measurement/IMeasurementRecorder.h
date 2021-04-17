@@ -4,10 +4,10 @@
 
 namespace Measurement
 {
-    class IMeasurementManager
+    class IMeasurementRecorder
     {
     public:
-        virtual ~IMeasurementManager() = default;
+        virtual ~IMeasurementRecorder() = default;
 
         virtual void Record(float value, time_t measurementTime) = 0;
         virtual void SetInterval(time_t interval) = 0;

@@ -1,4 +1,4 @@
-#include "../../Components/Measurement/MeasurementManager.h"
+#include "../../Components/Measurement/MeasurementRecorder.h"
 #include "../googletest-release-1.10.0/googletest/include/gtest/gtest.h"
 #include "../Mocks/MeasurementAggregationStrategyMock.hpp"
 #include "../Mocks/MeasurementContainerMock.hpp"
@@ -6,14 +6,14 @@
 
 using namespace testing;
 
-namespace MeasurementManagerTests
+namespace MeasurementRecorderTests
 {
-    class MeasurementManagerShould : public Test
+    class MeasurementRecorderShould : public Test
     {
     protected:
         Measurement::MeasurementContainerMock _container;
         Measurement::MeasurementAggregationStrategyMock _aggregationStrategy;
-        Measurement::MeasurementManager _manager
+        Measurement::MeasurementRecorder _recorder
         {
             _container,
             _aggregationStrategy,
@@ -22,62 +22,62 @@ namespace MeasurementManagerTests
         };
     };
 
-    TEST_F(MeasurementManagerShould, NotAddMeasurementToContainer_WhenIntervalHasNotElapsedYet)
+    TEST_F(MeasurementRecorderShould, NotAddMeasurementToContainer_WhenIntervalHasNotElapsedYet)
     {
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(0);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 102);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 102);
     }
 
-    TEST_F(MeasurementManagerShould, AddMeasurementToContainer_WhenIntervalElapsed)
+    TEST_F(MeasurementRecorderShould, AddMeasurementToContainer_WhenIntervalElapsed)
     {
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(1);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 102);
-        _manager.Record(4, 104);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 102);
+        _recorder.Record(4, 104);
     }
 
-    TEST_F(MeasurementManagerShould, AddMeasurementToContainer_AfterIntervalDurationWasChangedAndIntervalElapsed)
+    TEST_F(MeasurementRecorderShould, AddMeasurementToContainer_AfterIntervalDurationWasChangedAndIntervalElapsed)
     {
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(1);
 
-        _manager.SetInterval(1);
+        _recorder.SetInterval(1);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 101);
-        _manager.Record(4, 102);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 101);
+        _recorder.Record(4, 102);
     }
 
-    TEST_F(MeasurementManagerShould, NotAddMeasurementToContainer_AfterIntervalDurationWasChangedAndIntervalDidNotElapseYet)
+    TEST_F(MeasurementRecorderShould, NotAddMeasurementToContainer_AfterIntervalDurationWasChangedAndIntervalDidNotElapseYet)
     {
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(0);
 
-        _manager.SetInterval(1);
+        _recorder.SetInterval(1);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 101);
-        _manager.Record(4, 101);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 101);
+        _recorder.Record(4, 101);
     }
 
-    TEST_F(MeasurementManagerShould, RecordForEveryCall_IfIntervalIsSetToZero)
+    TEST_F(MeasurementRecorderShould, RecordForEveryCall_IfIntervalIsSetToZero)
     {
         EXPECT_CALL(_container, AddMeasurement(_))
             .Times(3);
 
-        _manager.SetInterval(0);
+        _recorder.SetInterval(0);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 101);
-        _manager.Record(4, 101);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 101);
+        _recorder.Record(4, 101);
     }
 
-    TEST_F(MeasurementManagerShould, AddSpecificMeasurementToContainer_WhenIntervalElapsed)
+    TEST_F(MeasurementRecorderShould, AddSpecificMeasurementToContainer_WhenIntervalElapsed)
     {
         //char dateString[] = "2018-02-01T23:18:02Z";
         Measurement::Measurement measurment;
@@ -91,18 +91,18 @@ namespace MeasurementManagerTests
             .WillOnce(Return(2.0f)) // This one is returned
             .WillOnce(Return(1.0f));
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 102);
-        _manager.Record(4, 104);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 102);
+        _recorder.Record(4, 104);
 
         ASSERT_STREQ("TestSensor", measurment.SensorId);
         ASSERT_EQ(101, measurment.Timestamp);
         ASSERT_FLOAT_EQ(2.0f, measurment.Value);
     }
 
-    TEST_F(MeasurementManagerShould, AddSpecificMeasurementsToContainer_WhenIntervalElapsedMultipleTimes)
+    TEST_F(MeasurementRecorderShould, AddSpecificMeasurementsToContainer_WhenIntervalElapsedMultipleTimes)
     {
-        _manager.SetInterval(1);
+        _recorder.SetInterval(1);
         Measurement::Measurement measurment1{};
         Measurement::Measurement measurment2{};
         Measurement::Measurement measurment3{};
@@ -126,16 +126,16 @@ namespace MeasurementManagerTests
             .WillOnce(Return(1.0f)) //<- That one is last and therefore highest value before new interval begins...
             .WillOnce(Return(7.0f));
 
-        _manager.Record(1, 100);
-        _manager.Record(1, 100);
-        _manager.Record(1, 100);
-        _manager.Record(1, 101);
-        _manager.Record(1, 101);
-        _manager.Record(1, 101);
-        _manager.Record(1, 102);
-        _manager.Record(1, 102);
-        _manager.Record(1, 102);
-        _manager.Record(1, 103);
+        _recorder.Record(1, 100);
+        _recorder.Record(1, 100);
+        _recorder.Record(1, 100);
+        _recorder.Record(1, 101);
+        _recorder.Record(1, 101);
+        _recorder.Record(1, 101);
+        _recorder.Record(1, 102);
+        _recorder.Record(1, 102);
+        _recorder.Record(1, 102);
+        _recorder.Record(1, 103);
 
         ASSERT_STREQ("TestSensor", measurment1.SensorId);
         ASSERT_EQ(100, measurment1.Timestamp);
@@ -148,16 +148,16 @@ namespace MeasurementManagerTests
         ASSERT_FLOAT_EQ(1.0f, measurment3.Value);
     }
 
-    TEST_F(MeasurementManagerShould, ResetAggregationStrategy_IfNewIntervalBegins)
+    TEST_F(MeasurementRecorderShould, ResetAggregationStrategy_IfNewIntervalBegins)
     {
         EXPECT_CALL(_aggregationStrategy, Reset())
             .Times(3);
 
-        _manager.SetInterval(1);
+        _recorder.SetInterval(1);
 
-        _manager.Record(3, 101);
-        _manager.Record(1, 102);
-        _manager.Record(4, 103);
-        _manager.Record(4, 104);
+        _recorder.Record(3, 101);
+        _recorder.Record(1, 102);
+        _recorder.Record(4, 103);
+        _recorder.Record(4, 104);
     }
 }

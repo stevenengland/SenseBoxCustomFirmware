@@ -1,8 +1,8 @@
-#include "MeasurementManager.h"
+#include "MeasurementRecorder.h"
 
 namespace Measurement
 {
-    void MeasurementManager::Record(const float value, const time_t measurementTime)
+    void MeasurementRecorder::Record(const float value, const time_t measurementTime)
     {
         if (_intervalStart == 0)
         {
@@ -23,7 +23,7 @@ namespace Measurement
         _intervalAggregate = _aggregationStrategy.Aggregate(value);
     }
 
-    void MeasurementManager::SetInterval(const time_t interval)
+    void MeasurementRecorder::SetInterval(const time_t interval)
     {
         _intervalDuration = interval;
     }

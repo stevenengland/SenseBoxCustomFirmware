@@ -1,16 +1,16 @@
 #pragma once
 
 #include "IMeasurementAggregationStrategy.h"
-#include "IMeasurementManager.h"
+#include "IMeasurementRecorder.h"
 #include "IMeasurementContainer.h"
 #include "ITimeConverter.h"
 
 namespace Measurement
 {
-    class MeasurementManager final : public IMeasurementManager
+    class MeasurementRecorder final : public IMeasurementRecorder
     {
     public:
-        MeasurementManager(
+        MeasurementRecorder(
             IMeasurementContainer& container,
             IMeasurementAggregationStrategy& aggregationStrategy,
             const time_t intervalDuration,

@@ -6,7 +6,7 @@
 #include "IElapsedTimeProvider.h"
 #include "IMeasurementContainer.h"
 #include "ISensor.h"
-#include "IMeasurementManager.h"
+#include "IMeasurementRecorder.h"
 #include "ITimeProvider.h"
 #include "IWifiManager.h"
 #include "SenseBoxIoMapper.h"
@@ -26,7 +26,7 @@ namespace Sketch
             Time::ITimeProvider& timeProvider,
             Sensor::ISensor& soundLevelMeter,
             Measurement::IMeasurementContainer& measurementContainer,
-            Measurement::IMeasurementManager& slmMeasurementManager,
+            Measurement::IMeasurementRecorder& slmMeasurementRecorder,
             Network::Wifi::IWifiManager& wifiManager,
             CentralUnit::IRamInfoReader& ramInfoReader,
             Logging::ILogger& logger,
@@ -37,7 +37,7 @@ namespace Sketch
               _timeProvider(timeProvider),
               _soundLevelMeter(soundLevelMeter),
               _measurementContainer(measurementContainer),
-              _slmMeasurementManager(slmMeasurementManager),
+              _slmMeasurementRecorder(slmMeasurementRecorder),
               _wifiManager(wifiManager),
               _ramInfoReader(ramInfoReader),
               _logger(logger),
@@ -57,7 +57,7 @@ namespace Sketch
         Time::ITimeProvider& _timeProvider;
         Sensor::ISensor& _soundLevelMeter;
         Measurement::IMeasurementContainer& _measurementContainer;
-        Measurement::IMeasurementManager& _slmMeasurementManager;
+        Measurement::IMeasurementRecorder& _slmMeasurementRecorder;
         Network::Wifi::IWifiManager& _wifiManager;
         CentralUnit::IRamInfoReader& _ramInfoReader;
         Logging::ILogger& _logger;
