@@ -25,10 +25,16 @@ namespace Logging
         void Notice(const char* format, ...) override;
         void Trace(const char* format, ...) override;
         void Verbose(const char* format, ...) override;
+        void FatalP(const char* format, ...) override;
+        void ErrorP(const char* format, ...) override;
+        void WarningP(const char* format, ...) override;
+        void NoticeP(const char* format, ...) override;
+        void TraceP(const char* format, ...) override;
+        void VerboseP(const char* format, ...) override;
     private:
         int _logLevel = 0;
 
-        void Log(const char* format, int logLevel, const char* prefix, va_list argumentPointer);
+        void Log(const char* format, int logLevel, bool printPrefix, va_list argumentPointer);
         void StreamPrintProgramMemory(Print& out, PGM_P format, ...)
         {
            va_list argumentPointer;

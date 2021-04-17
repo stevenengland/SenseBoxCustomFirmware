@@ -10,11 +10,59 @@ namespace Logging
         Serial.begin(115200);
     }
 
+    void SerialLogger::FatalP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelFatal, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
+    void SerialLogger::ErrorP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelError, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
+    void SerialLogger::WarningP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelWarning, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
+    void SerialLogger::NoticeP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelNotice, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
+    void SerialLogger::TraceP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelTrace, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
+    void SerialLogger::VerboseP(const char* format, ...)
+    {
+        va_list argumentPointer;
+        va_start(argumentPointer, format);
+        Log(format, LogLevelVerbose, true, argumentPointer);
+        va_end(argumentPointer);
+    }
+
     void SerialLogger::Fatal(const char* format, ...)
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelFatal, "[F]", argumentPointer);
+        Log(format, LogLevelFatal, false, argumentPointer);
         va_end(argumentPointer);
     }
 
@@ -22,7 +70,7 @@ namespace Logging
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelError, "[E]", argumentPointer);
+        Log(format, LogLevelError, false, argumentPointer);
         va_end(argumentPointer);
     }
 
@@ -30,7 +78,7 @@ namespace Logging
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelWarning, "[W]", argumentPointer);
+        Log(format, LogLevelWarning, false, argumentPointer);
         va_end(argumentPointer);
     }
 
@@ -38,7 +86,7 @@ namespace Logging
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelNotice, "[N]", argumentPointer);
+        Log(format, LogLevelNotice, false, argumentPointer);
         va_end(argumentPointer);
     }
 
@@ -46,7 +94,7 @@ namespace Logging
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelTrace, "[T]", argumentPointer);
+        Log(format, LogLevelTrace, false, argumentPointer);
         va_end(argumentPointer);
     }
 
@@ -54,17 +102,48 @@ namespace Logging
     {
         va_list argumentPointer;
         va_start(argumentPointer, format);
-        Log(format, LogLevelVerbose, "[V]", argumentPointer);
+        Log(format, LogLevelVerbose, false, argumentPointer);
         va_end(argumentPointer);
     }
 
-    void SerialLogger::Log(const char* format, int logLevel, const char* prefix, va_list argumentPointer)
+    void SerialLogger::Log(const char* format, const int logLevel, const bool printPrefix, va_list argumentPointer)
     {
         if (logLevel > _logLevel)
         {
             return;
         }
-        StreamPrintProgramMemory(Serial, PSTR("%s - "), prefix);
+
+        if (printPrefix)
+        {
+            char* prefix;
+
+            switch (logLevel)
+            {
+            case LogLevelFatal:
+                prefix = "[F]";
+                break;
+            case LogLevelError:
+                prefix = "[E]";
+                break;
+            case LogLevelWarning:
+                prefix = "[W]";
+                break;
+            case LogLevelNotice:
+                prefix = "[N]";
+                break;
+            case LogLevelTrace:
+                prefix = "[T]";
+                break;
+            case LogLevelVerbose:
+                prefix = "[V]";
+                break;
+            default:
+                break;;
+            }
+
+            StreamPrintProgramMemory(Serial, PSTR("%s - "), prefix);
+        }
+
         StreamPrintProgramMemory(Serial, PSTR(format), argumentPointer);
     }
 
