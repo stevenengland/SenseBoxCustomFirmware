@@ -19,7 +19,11 @@
 // Reading config
 const char Ssid[] = SECRET_SSID;
 const char Pass[] = SECRET_PASS;
-const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID;
+const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID; // Sound level meter
+const char TempSensorId[] PROGMEM = TEMP_SENSOR_ID; // Temperature
+const char RelHumiditySensorId[] PROGMEM = REL_HUMIDITY_SENSOR_ID; // Rel. humidity
+const char Pm10SensorId[] PROGMEM = PM10_SENSOR_ID; // PM10
+const char Pm25SensorId[] PROGMEM = PM25_SENSOR_ID; // PM2.5
 
 // Prepare Config
 Sketch::SketchConfiguration Configuration = []
