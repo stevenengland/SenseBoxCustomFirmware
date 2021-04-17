@@ -5,7 +5,7 @@
 
 namespace Sensor
 {
-    class SoundLevelMeterMock final : public ISensor
+    class SensorMock final : public ISensor
     {
     public:
         MOCK_METHOD(float, ReadValue, (), (override));

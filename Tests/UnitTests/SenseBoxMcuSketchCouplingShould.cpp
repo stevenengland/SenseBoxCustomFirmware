@@ -11,7 +11,7 @@
 #include "SenseBoxIoMapperMock.hpp"
 #include "WatchDogMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
-#include "SoundLevelMeterMock.hpp"
+#include "SensorMock.hpp"
 #include "TimeProviderMock.hpp"
 #include "WifiManagerMock.hpp"
 #include "LogLevel.h"
@@ -56,7 +56,7 @@ namespace SenseboxMcuSketchCouplingTests
         Time::ElapsedTimeProviderMock _elapsedTimeProviderMock;
         Time::TimeProviderMock _timeProviderMock;
         Peripherals::AnalogPortReaderMock _analogPortReaderMock;
-        Sensor::SoundLevelMeterMock _soundLevelMeterMock;
+        Sensor::SensorMock _soundLevelMeterMock;
         Measurement::MeasurementContainerMock _measurementContainerMock;
         Measurement::MeasurementRecorderMock _slmMeasurementRecorderMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
