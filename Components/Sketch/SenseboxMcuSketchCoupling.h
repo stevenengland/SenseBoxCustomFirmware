@@ -73,9 +73,12 @@ namespace Sketch
 
         int _watchDogInterval = _configuration.WatchDog_KeepAlive_TimeoutInterval;
 
+        int _lastKnownContainerFillCount = 0;
+
         bool CheckTimeProvider(int retryCounter) const;
         bool CheckWifiConnection(int retryCounter) const;
         void Reset() const;
         void HealthCheck() const;
+        void LogContainerDelta();
     };
 }

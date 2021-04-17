@@ -6,7 +6,7 @@ namespace Sketch
     {
         _logger.Begin();
 
-        _logger.Notice("Starting device\n");
+        _logger.NoticeP("Starting device\n");
 
         // Disable WatchDog until setup is done.
         _watchDog.Disable();
@@ -14,7 +14,7 @@ namespace Sketch
         // Wait a little so that serial can be plugged in
         _elapsedTimeProvider.WaitSync(5000);
 
-        _logger.Notice("Starting services\n");
+        _logger.NoticeP("Starting services\n");
 
         // Get up all pins
         _senseBoxIoMapper.PowerAll();
@@ -37,7 +37,7 @@ namespace Sketch
         // Finally enable WatchDog
         _watchDog.Enable(_configuration.WatchDog_KeepAlive_TimeoutInterval);
 
-        _logger.Notice("Device successfully started\n");
+        _logger.NoticeP("Device successfully started\n");
 
         HealthCheck();
     }
@@ -48,12 +48,18 @@ namespace Sketch
         if (_soundLevelMeasurementTimer.HasIntervalElapsed())
         {
             // Measure Sound Level
-            _slmMeasurementManager.Record(_soundLevelMeter.ReadValue(), _timeProvider.GetEpochTime());
+            const auto value = _soundLevelMeter.ReadValue();
+            const auto timestamp = _timeProvider.GetEpochTime();
+            _slmMeasurementManager.Record(value, timestamp);
+
+            LogContainerDelta();
         }
 
         if (_generalMeasurementTimer.HasIntervalElapsed())
         {
             // Measure all other sensors
+            // Record here without manager, right away and create masure,emt
+            LogContainerDelta();
         }
 
         if(_checkAndReconnectWifiTimer.HasIntervalElapsed())
@@ -61,7 +67,7 @@ namespace Sketch
             // Periodic check for a WiFi connection
             if (!_wifiManager.IsConnected())
             {
-                _logger.Notice("Network connection lost, reconnecting\n");
+                _logger.NoticeP("Network connection lost, reconnecting\n");
 
                 _wifiManager.Reconnect();
             }
@@ -70,7 +76,7 @@ namespace Sketch
         if (_uploadToOsemTimer.HasIntervalElapsed())
         {
             // Upload to OSeM
-            _logger.Notice("Starting upload to OSeM\n");
+            _logger.NoticeP("Starting upload to OSeM\n");
 
             _measurementContainer.ClearMeasurements(); // ToDo: Only if upload was successful
         }
@@ -89,10 +95,10 @@ namespace Sketch
     {
         for (auto i = 1; i <= retryCounter; ++i)
         {
-            auto currentTime = _timeProvider.GetEpochTime();
+            const auto currentTime = _timeProvider.GetEpochTime();
             if (currentTime > 0)
             {
-                _logger.Notice("Time Provider detected current timestamp: %d\n", currentTime);
+                _logger.NoticeP("Time Provider detected current timestamp: %d\n", currentTime);
 
                 return true;
             }
@@ -101,7 +107,7 @@ namespace Sketch
             _watchDog.Reset();
         }
 
-        _logger.Error("Time Provider was not able to provide a valid time\n");
+        _logger.ErrorP("Time Provider was not able to provide a valid time\n");
 
         return false;
     }
@@ -112,7 +118,7 @@ namespace Sketch
         {
             if (_wifiManager.IsConnected())
             {
-                _logger.Notice("Network Provider successfully connected to network\n");
+                _logger.NoticeP("Network Provider successfully connected to network\n");
 
                 return true;
             }
@@ -121,24 +127,47 @@ namespace Sketch
             _watchDog.Reset();
         }
 
-        _logger.Error("Network Provider was not able to connect to network\n");
+        _logger.ErrorP("Network Provider was not able to connect to network\n");
 
         return false;
     }
 
     void SenseboxMcuSketchCoupling::Reset() const
     {
-        _logger.Fatal("Resetting device\n");
+        _logger.FatalP("Resetting device\n");
         _elapsedTimeProvider.WaitSync(_watchDogInterval * 2);
     }
 
     void SenseboxMcuSketchCoupling::HealthCheck() const
     {
         _logger.Begin();
-        _logger.Notice("> --- Health check: ---\n");
-        _logger.Notice("> Current timestamp: %d\n", _timeProvider.GetEpochTime());
-        _logger.Notice("> Network connected: %d\n", (_wifiManager.IsConnected() ? 1 : 0));
-        _logger.Notice("> Measurement container fill level: %d\n", _measurementContainer.Count());
-        _logger.Notice("> Free SRAM: %d\n", _ramInfoReader.GetFreeRamSize());
+        _logger.NoticeP("> --- Health check: ---\n");
+        _logger.NoticeP("> Current timestamp: %d\n", _timeProvider.GetEpochTime());
+        _logger.NoticeP("> Network connected: %d\n", (_wifiManager.IsConnected() ? 1 : 0));
+        _logger.NoticeP("> Measurement container fill level: %d\n", _measurementContainer.Count());
+        _logger.NoticeP("> Free SRAM: %d\n", _ramInfoReader.GetFreeRamSize());
+    }
+
+    void SenseboxMcuSketchCoupling::LogContainerDelta()
+    {
+        const auto currentContainerFillCount = _measurementContainer.Count();
+        if (currentContainerFillCount < _lastKnownContainerFillCount)
+        {
+            _lastKnownContainerFillCount = 0;
+        }
+
+        if (currentContainerFillCount > _lastKnownContainerFillCount)
+        {
+            _lastKnownContainerFillCount = currentContainerFillCount;
+            Measurement::Measurement measurement;
+            if (_measurementContainer.GetMeasurement(currentContainerFillCount - 1, measurement))
+            {
+                const auto castValue = static_cast<int>(measurement.Value * 100);
+                _logger.NoticeP("Add measurement #%d: ", currentContainerFillCount);
+                _logger.Notice("SID:%s ", measurement.SensorId);
+                _logger.Notice("TS:%d ", measurement.Timestamp);
+                _logger.Notice("V:%d\n", castValue);
+            }
+        }
     }
 }
