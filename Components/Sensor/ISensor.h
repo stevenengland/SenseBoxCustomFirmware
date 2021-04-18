@@ -1,4 +1,5 @@
 #pragma once
+#include "SensorReads.h"
 
 namespace Sensor
 {
@@ -6,7 +7,8 @@ namespace Sensor
     {
         virtual ~ISensor() = default;
         
-        virtual float ReadValue() = 0;
+        virtual float ReadValue(int phenomenonId = 0) = 0;
+        virtual SensorReads ReadValues() = 0;
         virtual bool Init() = 0;
     };
 }

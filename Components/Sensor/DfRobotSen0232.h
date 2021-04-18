@@ -13,10 +13,13 @@ namespace Sensor
             int soundSensorPin
         );
 
-        float ReadValue() override;
         bool Init() override;
+        float ReadValue(int phenomenonId = 0) override;
+        SensorReads ReadValues() override;
     private:
         Peripherals::IAnalogPortReader& _portReader;
         int _soundSensorPin;
+
+        float GetDb() const;
     };
 }

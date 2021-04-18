@@ -5,16 +5,17 @@
 
 namespace Sensor
 {
-    class TiHdc1080Temperature final : public ISensor
+    class TiHdc1080 final : public ISensor
     {
     public:
-        explicit TiHdc1080Temperature(ITiHdc1080Driver& driver)
+        explicit TiHdc1080(ITiHdc1080Driver& driver)
             : _driver(driver)
         {
         }
 
-        float ReadValue() override;
         bool Init() override;
+        float ReadValue(int phenomenonId = 0) override;
+        SensorReads ReadValues() override;
     private:
         ITiHdc1080Driver& _driver;        
     };

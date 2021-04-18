@@ -1,26 +1,24 @@
 #include "Arduino.h"
 #include "TiHdc1080Driver.h"
-#include "TiHdc1080Temperature.h"
-#include "TiHdc1080Humidity.h"
+#include "TiHdc1080.h"
 
 Sensor::TiHdc1080Driver Driver;
-Sensor::TiHdc1080Temperature Temperature{ Driver };
-Sensor::TiHdc1080Humidity Humidity{ Driver };
+Sensor::TiHdc1080 TiHdc1080{ Driver };
 
 // ReSharper disable once CppInconsistentNaming
 void setup()
 {
     Serial.begin(9600);
-    Temperature.Init();
-    Humidity.Init();
+    TiHdc1080.Init();
 }
 
 // ReSharper disable once CppInconsistentNaming
 void loop()
 {
+    const auto values = TiHdc1080.ReadValues();
     Serial.print("T: ");
-    Serial.println(Temperature.ReadValue());
+    Serial.println(values.Reads[0]);
     Serial.print("H: ");
-    Serial.println(Humidity.ReadValue());
+    Serial.println(values.Reads[1]);
     delay(5000);
 }
