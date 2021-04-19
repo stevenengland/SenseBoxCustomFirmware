@@ -12,8 +12,12 @@
 #include "WifiManager.h"
 #include "Winc1500WifiConnector.h"
 #include "LogLevel.h"
+#include "NovaSds011.h"
+#include "NovaSds011Driver.h"
 #include "RamInfoReader.h"
 #include "SerialLogger.h"
+#include "TiHdc1080.h"
+#include "TiHdc1080Driver.h"
 #include "Winc1500TelnetLogger.h"
 
 // Reading config
@@ -41,6 +45,7 @@ Sketch::SketchConfiguration Configuration = []
     c.Sensor_Measure_Interval = 60000;
     c.SoundLevelMeter_Measure_Interval = 300;
     c.SoundLevelMeter_Measure_AggregationInterval = 1;
+    c.FineDustSensor_Measure_Interval = 600000;
     c.Osem_Upload_Interval = 300000;
     c.HealthCheck_Interval = 600000;
 
@@ -54,6 +59,11 @@ Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
 Time::Winc1500TimeProvider TimeProvider;
 Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
 Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
+Sensor::TiHdc1080Driver TiHdc1080Driver;
+Sensor::TiHdc1080 TemperatureSensor { TiHdc1080Driver };
+Sensor::TiHdc1080 HumiditySensor{ TiHdc1080Driver };
+Sensor::NovaSds011Driver Driver{ Serial2 };
+Sensor::NovaSds011 NovaSds{ Driver };
 Measurement::MaximumStrategy AggregationStrategy;
 Measurement::MeasurementContainer MeasurementContainer{Configuration.MeasurementContainer_Capacity};
 Measurement::MeasurementRecorder SlmMeasurementRecorder
@@ -75,6 +85,9 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     ElapsedTimeProvider,
     TimeProvider,
     SlMeter,
+    TemperatureSensor,
+    HumiditySensor,
+    NovaSds,
     MeasurementContainer,
     SlmMeasurementRecorder,
     WifiManager,

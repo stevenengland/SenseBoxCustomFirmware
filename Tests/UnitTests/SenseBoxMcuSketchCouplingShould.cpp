@@ -39,8 +39,9 @@ namespace SenseboxMcuSketchCouplingTests
             c.Sensor_Measure_Interval = 60000;
             c.SoundLevelMeter_Measure_Interval = 300;
             c.SoundLevelMeter_Measure_AggregationInterval = 1;
+            c.FineDustSensor_Measure_Interval = 600000;
             c.Osem_Upload_Interval = 300000;
-            c.HealthCheck_Interval = 360000;
+            c.HealthCheck_Interval = 300000;
 
             return c;
         }();
@@ -57,6 +58,9 @@ namespace SenseboxMcuSketchCouplingTests
         Time::TimeProviderMock _timeProviderMock;
         Peripherals::AnalogPortReaderMock _analogPortReaderMock;
         Sensor::SensorMock _soundLevelMeterMock;
+        Sensor::SensorMock _temperatureSensorMock;
+        Sensor::SensorMock _humiditySensorMock;
+        Sensor::SensorMock _fineDustSensorMock;
         Measurement::MeasurementContainerMock _measurementContainerMock;
         Measurement::MeasurementRecorderMock _slmMeasurementRecorderMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
@@ -69,6 +73,9 @@ namespace SenseboxMcuSketchCouplingTests
             _elapsedTimeProviderMock,
             _timeProviderMock,
             _soundLevelMeterMock,
+            _temperatureSensorMock,
+            _humiditySensorMock,
+            _fineDustSensorMock,
             _measurementContainerMock,
             _slmMeasurementRecorderMock,
             _wifiManagerMock,

@@ -58,7 +58,7 @@ namespace Sketch
         if (_generalMeasurementTimer.HasIntervalElapsed())
         {
             // Measure all other sensors
-            // Record here without manager, right away and create masure,emt
+            // Record here without manager, right away and create measurement
             LogContainerDelta();
         }
 
@@ -71,6 +71,13 @@ namespace Sketch
 
                 _wifiManager.Reconnect();
             }
+        }
+
+        if(_fineDustSensorMeasurementTimer.HasIntervalElapsed())
+        {
+            // Measure fine dust sensors
+            // Record here without manager, right away and create measurement
+            LogContainerDelta();
         }
 
         if (_uploadToOsemTimer.HasIntervalElapsed())

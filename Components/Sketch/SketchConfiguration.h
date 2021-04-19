@@ -25,6 +25,8 @@ namespace Sketch
         int SoundLevelMeter_Measure_Interval;
         int SoundLevelMeter_Measure_AggregationInterval;
 
+        int FineDustSensor_Measure_Interval;
+
         int Osem_Upload_Interval;
 
         int HealthCheck_Interval;
