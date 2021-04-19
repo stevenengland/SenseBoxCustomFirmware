@@ -1,6 +1,5 @@
 #include "../googletest-release-1.10.0/googletest/include/gtest/gtest.h"
 #include "../../Components/Sensor/TiHdc1080.h"
-#include "../Mocks/AnalogPortReaderMock.hpp"
 #include "../Mocks/TiHdc1080DriverMock.hpp"
 
 using namespace testing;

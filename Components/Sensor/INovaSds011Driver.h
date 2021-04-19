@@ -8,6 +8,6 @@ namespace Sensor
         virtual ~INovaSds011Driver() = default;
 
         virtual void Begin() = 0;
-        virtual void Read(float* p25, float* p10) = 0;
+        virtual void Read(float& p25, float& p10, bool& error) = 0;
     };
 }
