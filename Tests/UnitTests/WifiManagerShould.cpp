@@ -4,7 +4,7 @@
 
 using namespace testing;
 
-namespace WifiManagerTests
+namespace NetworkTests
 {
     TEST(WifiManagerShould, Connect)
     {

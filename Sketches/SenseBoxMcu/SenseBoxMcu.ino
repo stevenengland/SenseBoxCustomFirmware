@@ -43,12 +43,12 @@ Sketch::SketchConfiguration Configuration = []
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
     c.MeasurementContainer_Capacity = 1000;
     c.Sensor_Measure_Interval = 60000;
-    c.Sensor_Measure_AggregationInterval = 1;
+    c.Sensor_Measure_AggregationInterval = 0;
     c.SoundLevelMeter_Measure_Interval = 300;
     c.SoundLevelMeter_Measure_AggregationInterval = 1;
     c.FineDustSensor_Measure_Interval = 600000;
     c.Osem_Upload_Interval = 300000;
-    c.HealthCheck_Interval = 600000;
+    c.HealthCheck_Interval = 60000;
 
     return c;
 }();

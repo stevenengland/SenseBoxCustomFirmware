@@ -14,10 +14,16 @@ namespace Sketch
         // Wait a little so that serial can be plugged in
         _elapsedTimeProvider.WaitSync(5000);
 
-        _logger.NoticeP("Starting services\n");
+        _logger.NoticeP("Starting services and sensors\n");
 
         // Get up all pins
         _senseBoxIoMapper.PowerAll();
+
+        // Start the sensors
+        _soundLevelMeter.Init();
+        _temperatureSensor.Init();
+        _humiditySensor.Init();
+        _fineDustSensor.Init();
 
         // Attempt to turn on WiFi
         _wifiManager.Connect();
@@ -60,7 +66,9 @@ namespace Sketch
             // Measure sensors with common properties/requirements
             const auto timestamp = _timeProvider.GetEpochTime();
             const auto temperature = _temperatureSensor.ReadValue();
-            const auto humidity = _temperatureSensor.ReadValue(1);
+            const auto humidity = _humiditySensor.ReadValue(1);
+            //_logger.Notice("Temperature: %d   ", static_cast<int>(temperature*100));
+            //_logger.NoticeP("Humidity: %d\n", static_cast<int>(humidity*100));
             _temperatureMeasurementRecorder.Record(temperature, timestamp);
             LogContainerDelta();
             _humidityMeasurementRecorder.Record(humidity, timestamp);
@@ -74,6 +82,8 @@ namespace Sketch
             auto reads = _fineDustSensor.ReadValues();
             const auto p25 = reads.Reads[0];
             const auto p10 = reads.Reads[1];
+            //_logger.Notice("P25: %d   ", static_cast<int>(p25*100));
+            //_logger.NoticeP("P10: %d\n", static_cast<int>(p10*100));
             _fineDustP25MeasurementRecorder.Record(p25, timestamp);
             LogContainerDelta();
             _fineDustP10MeasurementRecorder.Record(p10, timestamp);
@@ -160,6 +170,7 @@ namespace Sketch
     {
         _logger.Begin();
         _logger.NoticeP("> --- Health check: ---\n");
+        _logger.NoticeP("> Time since last start: %d\n", _elapsedTimeProvider.ElapsedMilliseconds());
         _logger.NoticeP("> Current timestamp: %d\n", _timeProvider.GetEpochTime());
         _logger.NoticeP("> Network connected: %d\n", (_wifiManager.IsConnected() ? 1 : 0));
         _logger.NoticeP("> Measurement container fill level: %d\n", _measurementContainer.Count());

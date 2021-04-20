@@ -8,7 +8,7 @@
 
 using namespace testing;
 
-namespace SoundLevelMeterTests
+namespace SensorTests
 {
     TEST(DfRobotSen0232Should, ReadSensorValue)
     {

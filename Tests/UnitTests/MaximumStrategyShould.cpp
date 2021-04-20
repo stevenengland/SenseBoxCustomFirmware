@@ -4,7 +4,7 @@
 
 using namespace testing;
 
-namespace MeasurementAggregationStrategyTests
+namespace MeasurementTests
 {
     class MaximumStrategyShould :public Test {
     protected:

@@ -6,7 +6,7 @@
 
 using namespace testing;
 
-namespace MeasurementRecorderTests
+namespace MeasurementTests
 {
     class MeasurementRecorderShould : public Test
     {

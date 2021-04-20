@@ -19,7 +19,7 @@
 
 using namespace testing;
 
-namespace SenseboxMcuSketchCouplingTests
+namespace SketchTests
 {
     class SenseboxMcuSketchCouplingShould : public Test
     {
@@ -218,10 +218,39 @@ namespace SenseboxMcuSketchCouplingTests
 
 #pragma region Measurement
 
+    TEST_F(SenseboxMcuSketchCouplingShould, InitializeSoundSensor_DuringSetup)
+    {
+        EXPECT_CALL(_soundLevelMeterMock, Init()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, InitializeTemperatureSensor_DuringSetup)
+    {
+        EXPECT_CALL(_temperatureSensorMock, Init()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, InitializeHumiditySensor_DuringSetup)
+    {
+        EXPECT_CALL(_humiditySensorMock, Init()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, InitializeFineDustSensor_DuringSetup)
+    {
+        EXPECT_CALL(_fineDustSensorMock, Init()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
     TEST_F(SenseboxMcuSketchCouplingShould, RecordSound_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.SoundLevelMeter_Measure_Interval + 1));
         EXPECT_CALL(_slmMeasurementRecorderMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_soundLevelMeterMock, ReadValue(_)).Times(1);
 
         _sketchCoupling.Loop();
     }
@@ -230,6 +259,7 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Sensor_Measure_Interval + 1));
         EXPECT_CALL(_temperatureMeasurementRecorderMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_temperatureSensorMock, ReadValue(_)).Times(1);
 
         _sketchCoupling.Loop();
     }
@@ -238,6 +268,7 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Sensor_Measure_Interval + 1));
         EXPECT_CALL(_humidityMeasurementRecorderMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_humiditySensorMock, ReadValue(_)).Times(1);
 
         _sketchCoupling.Loop();
     }
@@ -246,6 +277,7 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
         EXPECT_CALL(_fineDustP25MeasurementRecorderMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_fineDustSensorMock, ReadValues()).Times(1);
 
         _sketchCoupling.Loop();
     }
@@ -254,6 +286,7 @@ namespace SenseboxMcuSketchCouplingTests
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
         EXPECT_CALL(_fineDustP10MeasurementRecorderMock, Record(_,_)).Times(1);
+        EXPECT_CALL(_fineDustSensorMock, ReadValues()).Times(1);
 
         _sketchCoupling.Loop();
     }
