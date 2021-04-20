@@ -63,42 +63,46 @@ Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
 Sensor::TiHdc1080Driver TiHdc1080Driver;
 Sensor::TiHdc1080 TemperatureSensor { TiHdc1080Driver };
 Sensor::TiHdc1080 HumiditySensor{ TiHdc1080Driver };
-Sensor::NovaSds011Driver Driver{ Serial2 };
-Sensor::NovaSds011 NovaSds{ Driver };
-Measurement::MaximumStrategy AggregationStrategy;
+Sensor::NovaSds011Driver NovaSds011Driver{ Serial2 };
+Sensor::NovaSds011 NovaSds{ NovaSds011Driver };
+Measurement::MaximumStrategy SlmAggregationStrategy;
+Measurement::MaximumStrategy TemperatureAggregationStrategy;
+Measurement::MaximumStrategy HumidityAggregationStrategy;
+Measurement::MaximumStrategy FineDustP25AggregationStrategy;
+Measurement::MaximumStrategy FineDustP10AggregationStrategy;
 Measurement::MeasurementContainer MeasurementContainer{Configuration.MeasurementContainer_Capacity};
 Measurement::MeasurementRecorder SlmMeasurementRecorder
 {
     MeasurementContainer,
-    AggregationStrategy,
+    SlmAggregationStrategy,
     Configuration.SoundLevelMeter_Measure_AggregationInterval,
     SlmId
 };
 Measurement::MeasurementRecorder TemperatureMeasurementRecorder
 {
     MeasurementContainer,
-    AggregationStrategy,
+    TemperatureAggregationStrategy,
     Configuration.Sensor_Measure_AggregationInterval,
     TempSensorId
 };
 Measurement::MeasurementRecorder HumidityMeasurementRecorder
 {
     MeasurementContainer,
-    AggregationStrategy,
+    HumidityAggregationStrategy,
     Configuration.Sensor_Measure_AggregationInterval,
     RelHumiditySensorId
 };
 Measurement::MeasurementRecorder FineDustP25MeasurementRecorder
 {
     MeasurementContainer,
-    AggregationStrategy,
+    FineDustP25AggregationStrategy,
     Configuration.Sensor_Measure_AggregationInterval,
     Pm25SensorId
 };
 Measurement::MeasurementRecorder FineDustP10MeasurementRecorder
 {
     MeasurementContainer,
-    AggregationStrategy,
+    FineDustP10AggregationStrategy,
     Configuration.Sensor_Measure_AggregationInterval,
     Pm10SensorId
 };
