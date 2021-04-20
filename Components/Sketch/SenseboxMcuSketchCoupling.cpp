@@ -48,8 +48,8 @@ namespace Sketch
         if (_soundLevelMeasurementTimer.HasIntervalElapsed())
         {
             // Measure Sound Level
-            const auto value = _soundLevelMeter.ReadValue();
             const auto timestamp = _timeProvider.GetEpochTime();
+            const auto value = _soundLevelMeter.ReadValue();
             _slmMeasurementRecorder.Record(value, timestamp);
 
             LogContainerDelta();
@@ -57,8 +57,26 @@ namespace Sketch
 
         if (_generalMeasurementTimer.HasIntervalElapsed())
         {
-            // Measure all other sensors
-            // Record here without manager, right away and create measurement
+            // Measure sensors with common properties/requirements
+            const auto timestamp = _timeProvider.GetEpochTime();
+            const auto temperature = _temperatureSensor.ReadValue();
+            const auto humidity = _temperatureSensor.ReadValue(1);
+            _temperatureMeasurementRecorder.Record(temperature, timestamp);
+            LogContainerDelta();
+            _humidityMeasurementRecorder.Record(humidity, timestamp);
+            LogContainerDelta();
+        }
+
+        if (_fineDustSensorMeasurementTimer.HasIntervalElapsed())
+        {
+            // Measure fine dust sensors
+            const auto timestamp = _timeProvider.GetEpochTime();
+            auto reads = _fineDustSensor.ReadValues();
+            const auto p25 = reads.Reads[0];
+            const auto p10 = reads.Reads[1];
+            _fineDustP25MeasurementRecorder.Record(p25, timestamp);
+            LogContainerDelta();
+            _fineDustP10MeasurementRecorder.Record(p10, timestamp);
             LogContainerDelta();
         }
 
@@ -71,13 +89,6 @@ namespace Sketch
 
                 _wifiManager.Reconnect();
             }
-        }
-
-        if(_fineDustSensorMeasurementTimer.HasIntervalElapsed())
-        {
-            // Measure fine dust sensors
-            // Record here without manager, right away and create measurement
-            LogContainerDelta();
         }
 
         if (_uploadToOsemTimer.HasIntervalElapsed())

@@ -21,6 +21,7 @@ namespace Sketch
         int MeasurementContainer_Capacity;
 
         int Sensor_Measure_Interval;
+        int Sensor_Measure_AggregationInterval;
 
         int SoundLevelMeter_Measure_Interval;
         int SoundLevelMeter_Measure_AggregationInterval;

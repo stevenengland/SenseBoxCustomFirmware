@@ -43,6 +43,7 @@ Sketch::SketchConfiguration Configuration = []
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
     c.MeasurementContainer_Capacity = 1000;
     c.Sensor_Measure_Interval = 60000;
+    c.Sensor_Measure_AggregationInterval = 1;
     c.SoundLevelMeter_Measure_Interval = 300;
     c.SoundLevelMeter_Measure_AggregationInterval = 1;
     c.FineDustSensor_Measure_Interval = 600000;
@@ -73,6 +74,34 @@ Measurement::MeasurementRecorder SlmMeasurementRecorder
     Configuration.SoundLevelMeter_Measure_AggregationInterval,
     SlmId
 };
+Measurement::MeasurementRecorder TemperatureMeasurementRecorder
+{
+    MeasurementContainer,
+    AggregationStrategy,
+    Configuration.Sensor_Measure_AggregationInterval,
+    TempSensorId
+};
+Measurement::MeasurementRecorder HumidityMeasurementRecorder
+{
+    MeasurementContainer,
+    AggregationStrategy,
+    Configuration.Sensor_Measure_AggregationInterval,
+    RelHumiditySensorId
+};
+Measurement::MeasurementRecorder FineDustP25MeasurementRecorder
+{
+    MeasurementContainer,
+    AggregationStrategy,
+    Configuration.Sensor_Measure_AggregationInterval,
+    Pm25SensorId
+};
+Measurement::MeasurementRecorder FineDustP10MeasurementRecorder
+{
+    MeasurementContainer,
+    AggregationStrategy,
+    Configuration.Sensor_Measure_AggregationInterval,
+    Pm10SensorId
+};
 Network::Wifi::Winc1500WifiConnector WifiConnector;
 Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
 CentralUnit::RamInfoReader RamInfoReader;
@@ -90,6 +119,10 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     NovaSds,
     MeasurementContainer,
     SlmMeasurementRecorder,
+    TemperatureMeasurementRecorder,
+    HumidityMeasurementRecorder,
+    FineDustP25MeasurementRecorder,
+    FineDustP10MeasurementRecorder,
     WifiManager,
     RamInfoReader,
     Logger,

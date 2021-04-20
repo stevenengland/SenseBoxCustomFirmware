@@ -30,6 +30,10 @@ namespace Sketch
             Sensor::ISensor& fineDustSensor,
             Measurement::IMeasurementContainer& measurementContainer,
             Measurement::IMeasurementRecorder& slmMeasurementRecorder,
+            Measurement::IMeasurementRecorder& temperatureMeasurementRecorder,
+            Measurement::IMeasurementRecorder& humidityMeasurementRecorder,
+            Measurement::IMeasurementRecorder& fineDustP25MeasurementRecorder,
+            Measurement::IMeasurementRecorder& fineDustP10MeasurementRecorder,
             Network::Wifi::IWifiManager& wifiManager,
             CentralUnit::IRamInfoReader& ramInfoReader,
             Logging::ILogger& logger,
@@ -44,6 +48,10 @@ namespace Sketch
               _fineDustSensor(fineDustSensor),
               _measurementContainer(measurementContainer),
               _slmMeasurementRecorder(slmMeasurementRecorder),
+              _temperatureMeasurementRecorder(temperatureMeasurementRecorder),
+              _humidityMeasurementRecorder(humidityMeasurementRecorder),
+              _fineDustP25MeasurementRecorder(fineDustP25MeasurementRecorder),
+              _fineDustP10MeasurementRecorder(fineDustP10MeasurementRecorder),
               _wifiManager(wifiManager),
               _ramInfoReader(ramInfoReader),
               _logger(logger),
@@ -67,6 +75,10 @@ namespace Sketch
         Sensor::ISensor& _fineDustSensor;
         Measurement::IMeasurementContainer& _measurementContainer;
         Measurement::IMeasurementRecorder& _slmMeasurementRecorder;
+        Measurement::IMeasurementRecorder& _temperatureMeasurementRecorder;
+        Measurement::IMeasurementRecorder& _humidityMeasurementRecorder;
+        Measurement::IMeasurementRecorder& _fineDustP25MeasurementRecorder;
+        Measurement::IMeasurementRecorder& _fineDustP10MeasurementRecorder;
         Network::Wifi::IWifiManager& _wifiManager;
         CentralUnit::IRamInfoReader& _ramInfoReader;
         Logging::ILogger& _logger;
