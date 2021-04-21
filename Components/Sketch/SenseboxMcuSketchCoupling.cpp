@@ -57,10 +57,14 @@ namespace Sketch
             // Measure Sound Level
             const auto timestamp = _timeProvider.GetEpochTime();
             const auto soundLevel = _soundLevelMeter.ReadValue();
-            if (soundLevel != NAN)
+            if (!isnan(soundLevel))
             {
                 _slmMeasurementRecorder.Record(soundLevel, timestamp);
                 LogContainerDelta();
+            }
+            else
+            {
+                _logger.WarningP("Could not read sound level\n");
             }
 
         }
@@ -73,16 +77,24 @@ namespace Sketch
             const auto humidity = _humiditySensor.ReadValue(1);
             //_logger.Notice("Temperature: %d   ", static_cast<int>(temperature*100));
             //_logger.NoticeP("Humidity: %d\n", static_cast<int>(humidity*100));
-            if (temperature != NAN)
+            if (!isnan(temperature))
             {
                 _temperatureMeasurementRecorder.Record(temperature, timestamp);
                 LogContainerDelta();
             }
+            else
+            {
+                _logger.WarningP("Could not read temperature\n");
+            }
 
-            if (humidity != NAN)
+            if (!isnan(humidity))
             {
                 _humidityMeasurementRecorder.Record(humidity, timestamp);
                 LogContainerDelta();
+            }
+            else
+            {
+                _logger.WarningP("Could not read humidity\n");
             }
         }
 
@@ -95,16 +107,24 @@ namespace Sketch
             const auto p10 = reads.Reads[1];
             //_logger.Notice("P25: %d   ", static_cast<int>(p25*100));
             //_logger.NoticeP("P10: %d\n", static_cast<int>(p10*100));
-            if (p25 != NAN)
+            if (!isnan(p25))
             {
                 _fineDustP25MeasurementRecorder.Record(p25, timestamp);
                 LogContainerDelta();
             }
+            else
+            {
+                _logger.WarningP("Could not read PM25\n");
+            }
 
-            if (p10 != NAN)
+            if (!isnan(p10))
             {
                 _fineDustP10MeasurementRecorder.Record(p10, timestamp);
                 LogContainerDelta();
+            }
+            else
+            {
+                _logger.WarningP("Could not read PM10\n");
             }
         }
 

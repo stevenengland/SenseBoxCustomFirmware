@@ -160,4 +160,34 @@ namespace MeasurementTests
         _recorder.Record(4, 103);
         _recorder.Record(4, 104);
     }
+
+    TEST_F(MeasurementRecorderShould, AggregateValueOnce_BeforeAddingAMeasurement_IfIntervalIsZero)
+    {
+        InSequence s;
+        EXPECT_CALL(_aggregationStrategy, Aggregate(_)).Times(1);
+        EXPECT_CALL(_container, AddMeasurement(_)).Times(1);
+
+        _recorder.SetInterval(0);
+
+        _recorder.Record(3, 101);
+    }
+
+    TEST_F(MeasurementRecorderShould, AggregateValueOnce_IfIntervalIsNotZero)
+    {
+        EXPECT_CALL(_aggregationStrategy, Aggregate(_)).Times(1);
+
+        _recorder.Record(3, 101);
+    }
+
+    TEST_F(MeasurementRecorderShould, AddMeasurementWithValueNeqZero_IfIntervalIsZero)
+    {
+        Measurement::Measurement measurment{};
+        _recorder.SetInterval(0);
+        EXPECT_CALL(_aggregationStrategy, Aggregate(_)).WillOnce(Return(5.0f));
+        EXPECT_CALL(_container, AddMeasurement(_)).WillOnce(SaveArg<0>(&measurment));
+
+        _recorder.Record(3, 101);
+
+        ASSERT_FLOAT_EQ(5.0f, measurment.Value);
+    }
 }
