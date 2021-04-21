@@ -1,4 +1,5 @@
 #include "SenseboxMcuSketchCoupling.h"
+#include "math.h"
 
 namespace Sketch
 {
@@ -55,10 +56,13 @@ namespace Sketch
         {
             // Measure Sound Level
             const auto timestamp = _timeProvider.GetEpochTime();
-            const auto value = _soundLevelMeter.ReadValue();
-            _slmMeasurementRecorder.Record(value, timestamp);
+            const auto soundLevel = _soundLevelMeter.ReadValue();
+            if (soundLevel != NAN)
+            {
+                _slmMeasurementRecorder.Record(soundLevel, timestamp);
+                LogContainerDelta();
+            }
 
-            LogContainerDelta();
         }
 
         if (_generalMeasurementTimer.HasIntervalElapsed())
@@ -69,10 +73,17 @@ namespace Sketch
             const auto humidity = _humiditySensor.ReadValue(1);
             //_logger.Notice("Temperature: %d   ", static_cast<int>(temperature*100));
             //_logger.NoticeP("Humidity: %d\n", static_cast<int>(humidity*100));
-            _temperatureMeasurementRecorder.Record(temperature, timestamp);
-            LogContainerDelta();
-            _humidityMeasurementRecorder.Record(humidity, timestamp);
-            LogContainerDelta();
+            if (temperature != NAN)
+            {
+                _temperatureMeasurementRecorder.Record(temperature, timestamp);
+                LogContainerDelta();
+            }
+
+            if (humidity != NAN)
+            {
+                _humidityMeasurementRecorder.Record(humidity, timestamp);
+                LogContainerDelta();
+            }
         }
 
         if (_fineDustSensorMeasurementTimer.HasIntervalElapsed())
@@ -84,10 +95,17 @@ namespace Sketch
             const auto p10 = reads.Reads[1];
             //_logger.Notice("P25: %d   ", static_cast<int>(p25*100));
             //_logger.NoticeP("P10: %d\n", static_cast<int>(p10*100));
-            _fineDustP25MeasurementRecorder.Record(p25, timestamp);
-            LogContainerDelta();
-            _fineDustP10MeasurementRecorder.Record(p10, timestamp);
-            LogContainerDelta();
+            if (p25 != NAN)
+            {
+                _fineDustP25MeasurementRecorder.Record(p25, timestamp);
+                LogContainerDelta();
+            }
+
+            if (p10 != NAN)
+            {
+                _fineDustP10MeasurementRecorder.Record(p10, timestamp);
+                LogContainerDelta();
+            }
         }
 
         if(_checkAndReconnectWifiTimer.HasIntervalElapsed())

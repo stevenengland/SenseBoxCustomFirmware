@@ -255,11 +255,29 @@ namespace SketchTests
         _sketchCoupling.Loop();
     }
 
+    TEST_F(SenseboxMcuSketchCouplingShould, NotRecordSound_WhenSensorReturnedNan_DuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.SoundLevelMeter_Measure_Interval + 1));
+        EXPECT_CALL(_slmMeasurementRecorderMock, Record(_, _)).Times(0);
+        EXPECT_CALL(_soundLevelMeterMock, ReadValue(_)).WillOnce(Return(NAN)).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
     TEST_F(SenseboxMcuSketchCouplingShould, RecordTemperature_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Sensor_Measure_Interval + 1));
         EXPECT_CALL(_temperatureMeasurementRecorderMock, Record(_,_)).Times(1);
         EXPECT_CALL(_temperatureSensorMock, ReadValue(_)).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, NotRecordTemperature_WhenSensorReturnedNan_DuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Sensor_Measure_Interval + 1));
+        EXPECT_CALL(_temperatureMeasurementRecorderMock, Record(_, _)).Times(0);
+        EXPECT_CALL(_temperatureSensorMock, ReadValue(_)).WillOnce(Return(NAN)).Times(1);
 
         _sketchCoupling.Loop();
     }
@@ -273,6 +291,15 @@ namespace SketchTests
         _sketchCoupling.Loop();
     }
 
+    TEST_F(SenseboxMcuSketchCouplingShould, NotRecordHumdity_WhenSensorReturnedNan_DuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Sensor_Measure_Interval + 1));
+        EXPECT_CALL(_humidityMeasurementRecorderMock, Record(_, _)).Times(0);
+        EXPECT_CALL(_humiditySensorMock, ReadValue(_)).WillOnce(Return(NAN)).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
     TEST_F(SenseboxMcuSketchCouplingShould, RecordPm25_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
@@ -282,11 +309,35 @@ namespace SketchTests
         _sketchCoupling.Loop();
     }
 
+    TEST_F(SenseboxMcuSketchCouplingShould, NotRecordPm25_WhenSensorReturnedNan_DuringLoop)
+    {
+        Sensor::SensorReads reads{};
+        reads.Reads[0] = NAN;
+        reads.Reads[1] = NAN;
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
+        EXPECT_CALL(_fineDustP25MeasurementRecorderMock, Record(_, _)).Times(0);
+        EXPECT_CALL(_fineDustSensorMock, ReadValues()).WillOnce(Return(reads)).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
     TEST_F(SenseboxMcuSketchCouplingShould, RecordPm10_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
         EXPECT_CALL(_fineDustP10MeasurementRecorderMock, Record(_,_)).Times(1);
         EXPECT_CALL(_fineDustSensorMock, ReadValues()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, NotRecordPm10_WhenSensorReturnedNan_DuringLoop)
+    {
+        Sensor::SensorReads reads{};
+        reads.Reads[0] = NAN;
+        reads.Reads[1] = NAN;
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
+        EXPECT_CALL(_fineDustP10MeasurementRecorderMock, Record(_, _)).Times(0);
+        EXPECT_CALL(_fineDustSensorMock, ReadValues()).WillOnce(Return(reads)).Times(1);
 
         _sketchCoupling.Loop();
     }
