@@ -48,6 +48,6 @@ namespace Network
     }
     size_t TcpStream::Transmit(char* text)
     {
-        return _client.print(text);
+        return _client.print(F(text));
     }
 }
