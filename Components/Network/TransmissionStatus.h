@@ -1,3 +1,5 @@
+#pragma once
+
 typedef enum {
     Timeout = 255,
     NotStarted = 0,
