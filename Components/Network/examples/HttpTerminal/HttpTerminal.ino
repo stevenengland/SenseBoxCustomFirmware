@@ -13,7 +13,9 @@ last revision November 2015
 #include <SPI.h>
 #include <WiFi101.h>
 
+#include "HttpTerminal.h"
 #include "TcpStream.h"
+#include "ArduinoElapsedTimeProvider.h"
 
 #include "arduino_secrets.h" 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -31,6 +33,8 @@ const char HostName[] PROGMEM = "www.google.com";    // name address for Google 
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
 Network::TcpStream TcpClient;
+Time::ArduinoElapsedTimeProvider elapsedTimeProvider;
+Network::HttpTerminal Terminal{ TcpClient, elapsedTimeProvider };
 
 // ReSharper disable once CppInconsistentNaming
 void setup() {
@@ -61,50 +65,49 @@ void setup() {
     PrintWiFiStatus();
 
     Serial.println("\nStarting connection to server...");
-    Serial.print("Availability before connection: ");
-    Serial.println(TcpClient.IsAvailable());
     // if you get a connection, report back via serial:
-    if (TcpClient.TryConnect(HostName, 443)) 
+    if (Terminal.TryConnect(HostName, 443)) 
     {
         Serial.println("connected to server");
-        Serial.print("Availability after establishing connection: ");
-        Serial.println(TcpClient.IsAvailable());
         // Make a HTTP request:
-        TcpClient.Transmit("GET /search?q=arduino HTTP/1.1\n");
-        TcpClient.Transmit("Host: www.google.com\n");
-        TcpClient.Transmit("Connection: close\n");
-        TcpClient.Transmit("\n");
-        Serial.print("Availability after transmission of request: ");
-        Serial.println(TcpClient.IsAvailable());
-        Serial.println(millis());
+        Terminal.SendRequestLine("GET", "/search?q=arduino", "HTTP/1.1");
+        Terminal.SendHeader("Host", "www.google.com");
+        Terminal.SendHeader("Connection", "close");
+        Terminal.SendEmptyLine();
     }
 }
 
-bool firstMillisCall = true;
 // ReSharper disable once CppInconsistentNaming
 void loop() {
     // if there are incoming bytes available
     // from the server, read them and print them:
-    while (TcpClient.IsAvailable()) {
-        if (firstMillisCall) // To show how many millis elapsed since the transmission until client became available.
-        {
-            Serial.println(millis());
-            firstMillisCall = false;
-        }
 
-        char c = TcpClient.Receive();
-        Serial.write(c);
+    char buffer[10]{};
+    bool proceedReading = true;
+    while (proceedReading) 
+    {
+        auto tStatus = Terminal.ReadResponse(buffer, sizeof(buffer), 2000);
+        if (tStatus == InProgress || tStatus == Completed)
+        {
+            Serial.write(buffer);
+            if (tStatus == Completed)
+            {
+                proceedReading = false;
+            }
+        }
+        else
+        {
+            proceedReading = false;
+        }
     }
 
     // if the server's disconnected, stop the client:
-    if (!TcpClient.IsConnected()) {
-        Serial.println();
-        Serial.println("disconnecting from server.");
-        TcpClient.Stop();
+    Serial.println();
+    Serial.println("disconnecting from server.");
+    Terminal.CloseConnection();
 
-        // do nothing forevermore:
-        while (true);
-    }
+    // do nothing forevermore:
+    while (true);
 }
 
 

@@ -8,7 +8,7 @@ namespace Network
     class TcpStream final : public ITcpStream
     {
     public:
-        bool Connect(const char* host, uint16_t port, bool useSsl = true) override;
+        bool TryConnect(const char* host, uint16_t port, bool useSsl = true) override;
         bool IsConnected() override;
         bool IsAvailable() override;
         int Receive() override;
@@ -16,7 +16,7 @@ namespace Network
         int Peek() override;
         void Flush() override;
         void Stop() override;
-        size_t Transmit(char* text) override;
+        size_t Transmit(const char* text) override;
     private:
         WiFiClient _client{};
     };

@@ -2,7 +2,7 @@
 
 namespace Network
 {
-    bool TcpStream::Connect(const char* host, uint16_t port, const bool useSsl)
+    bool TcpStream::TryConnect(const char* host, uint16_t port, const bool useSsl)
     {
         if (useSsl)
         {
@@ -46,7 +46,8 @@ namespace Network
     {
         _client.stop();
     }
-    size_t TcpStream::Transmit(char* text)
+
+    size_t TcpStream::Transmit(const char* text)
     {
         return _client.print(F(text));
     }
