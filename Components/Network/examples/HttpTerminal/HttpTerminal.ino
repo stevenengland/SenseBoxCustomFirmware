@@ -66,7 +66,7 @@ void setup() {
 
     Serial.println("\nStarting connection to server...");
     // if you get a connection, report back via serial:
-    if (Terminal.TryConnect(HostName, 443)) 
+    if (Terminal.TryConnect(HostName, 80, false)) 
     {
         Serial.println("connected to server");
         // Make a HTTP request:
@@ -86,17 +86,19 @@ void loop() {
     bool proceedReading = true;
     while (proceedReading) 
     {
-        auto tStatus = Terminal.ReadResponse(buffer, sizeof(buffer), 2000);
+        auto tStatus = Terminal.ReadResponse(buffer, sizeof(buffer), 5000);
         if (tStatus == InProgress || tStatus == Completed)
         {
             Serial.write(buffer);
             if (tStatus == Completed)
             {
+                Serial.println(tStatus);
                 proceedReading = false;
             }
         }
         else
         {
+            Serial.println(tStatus);
             proceedReading = false;
         }
     }
