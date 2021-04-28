@@ -22,6 +22,7 @@ namespace MeasurementTests
         const auto length = _converter.Convert(measurement, buffer);
 
         ASSERT_EQ(length, 56);
+        ASSERT_EQ((size_t)length, strlen(buffer));
         ASSERT_STREQ(buffer, "FAKE0e9537bfd7001b507f01,   199.10,2021-03-21T20:00:00Z\n");
     }
 }
