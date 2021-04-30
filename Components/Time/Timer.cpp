@@ -10,7 +10,7 @@ namespace Time
     bool Timer::HasIntervalElapsed()
     {
         _timeNow = _elapsedTimeProvider.ElapsedMilliseconds();
-        if (_timeNow > _timeLastRun + _interval) {
+        if (_timeNow - _timeLastRun > _interval) {
             _timeLastRun = _timeNow;
             return true;
         }
