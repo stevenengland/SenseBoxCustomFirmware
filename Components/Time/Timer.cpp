@@ -12,7 +12,7 @@ namespace Time
         _timeNow = _elapsedTimeProvider.ElapsedMilliseconds();
         if (_timeNow - _timeLastRun > _interval) 
         {
-            _timeLastRun = ((unsigned long)(_timeNow / _interval)) * _interval;
+            _timeLastRun = static_cast<unsigned long>(_timeNow / _interval) * _interval;
             return true;
         }
 

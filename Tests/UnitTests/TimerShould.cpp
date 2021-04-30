@@ -9,7 +9,7 @@ namespace TimeTests
 {
     class TimerShould : public Test {
     public:
-        Time::ElapsedTimeProviderMock ElapsedTimeProviderMock;
+        Time::ElapsedTimeProviderMock ElapsedTimeProviderMock{};
         Time::Timer Timer{ElapsedTimeProviderMock, 10000};
     };
 
@@ -46,11 +46,11 @@ namespace TimeTests
             .WillOnce(Return(500)) // false
             .WillOnce(Return(10001)); // true
 
-        auto test1 = (unsigned long)(500 - 4294967290);
-        auto test2 = (unsigned long)(10001 - 4294967290);
+        const auto test1 = static_cast<unsigned long>(500 - 4294967290);
+        const auto test2 = static_cast<unsigned long>(10001 - 4294967290);
 
-        ASSERT_EQ((unsigned long)506, test1);
-        ASSERT_EQ((unsigned long)10007, test2);
+        ASSERT_EQ(static_cast<unsigned long>(506), test1);
+        ASSERT_EQ(static_cast<unsigned long>(10007), test2);
         ASSERT_TRUE(Timer.HasIntervalElapsed());
         ASSERT_FALSE(Timer.HasIntervalElapsed());
         ASSERT_FALSE(Timer.HasIntervalElapsed());
