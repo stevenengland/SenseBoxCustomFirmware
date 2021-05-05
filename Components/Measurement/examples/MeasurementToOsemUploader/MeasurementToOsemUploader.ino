@@ -80,6 +80,8 @@ void SendDataToOsem()
         Serial.print("Data could not be sent... Status: ");
         Serial.println(uploadStatus);
     }
+
+    Uploader.EndUpload();
 }
 
 // ReSharper disable once CppInconsistentNaming
