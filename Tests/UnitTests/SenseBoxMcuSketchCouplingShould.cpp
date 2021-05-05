@@ -1,21 +1,22 @@
-#include <gtest.h>
 #include <gmock.h>
+#include <gtest.h>
 
 #include "AnalogPortReaderMock.hpp"
 #include "ElapsedTimeProviderMock.hpp"
 #include "gmock-matchers.h"
 #include "gmock-spec-builders.h"
 #include "LoggerMock.hpp"
+#include "LogLevel.h"
 #include "MeasurementContainerMock.hpp"
 #include "MeasurementRecorderMock.hpp"
+#include "MeasurementUploaderMock.hpp"
+#include "RamInfoReaderMock.hpp"
 #include "SenseBoxIoMapperMock.hpp"
-#include "WatchDogMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
 #include "SensorMock.hpp"
 #include "TimeProviderMock.hpp"
+#include "WatchDogMock.hpp"
 #include "WifiManagerMock.hpp"
-#include "LogLevel.h"
-#include "RamInfoReaderMock.hpp"
 
 using namespace testing;
 
@@ -69,6 +70,7 @@ namespace SketchTests
         Measurement::MeasurementRecorderMock _humidityMeasurementRecorderMock;
         Measurement::MeasurementRecorderMock _fineDustP25MeasurementRecorderMock;
         Measurement::MeasurementRecorderMock _fineDustP10MeasurementRecorderMock;
+        Measurement::MeasurementUploaderMock _measurementUploaderMock;
         Network::Wifi::WifiManagerMock _wifiManagerMock;
         CentralUnit::RamInfoReaderMock _ramInfoReaderMock;
         Logging::LoggerMock _loggerMock;
@@ -88,6 +90,7 @@ namespace SketchTests
             _humidityMeasurementRecorderMock,
             _fineDustP25MeasurementRecorderMock,
             _fineDustP10MeasurementRecorderMock,
+            _measurementUploaderMock,
             _wifiManagerMock,
             _ramInfoReaderMock,
             _loggerMock,

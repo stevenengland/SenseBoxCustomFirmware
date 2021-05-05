@@ -13,6 +13,7 @@
 #include "SketchConfiguration.h"
 #include "IRamInfoReader.h"
 #include "ILogger.h"
+#include "IMeasurmentUploader.h"
 
 namespace Sketch
 {
@@ -34,6 +35,7 @@ namespace Sketch
             Measurement::IMeasurementRecorder& humidityMeasurementRecorder,
             Measurement::IMeasurementRecorder& fineDustP25MeasurementRecorder,
             Measurement::IMeasurementRecorder& fineDustP10MeasurementRecorder,
+            Measurement::IMeasurementUploader& measurementUploader,
             Network::Wifi::IWifiManager& wifiManager,
             CentralUnit::IRamInfoReader& ramInfoReader,
             Logging::ILogger& logger,
@@ -52,6 +54,7 @@ namespace Sketch
               _humidityMeasurementRecorder(humidityMeasurementRecorder),
               _fineDustP25MeasurementRecorder(fineDustP25MeasurementRecorder),
               _fineDustP10MeasurementRecorder(fineDustP10MeasurementRecorder),
+              _measurementUploader(measurementUploader),
               _wifiManager(wifiManager),
               _ramInfoReader(ramInfoReader),
               _logger(logger),
@@ -79,6 +82,7 @@ namespace Sketch
         Measurement::IMeasurementRecorder& _humidityMeasurementRecorder;
         Measurement::IMeasurementRecorder& _fineDustP25MeasurementRecorder;
         Measurement::IMeasurementRecorder& _fineDustP10MeasurementRecorder;
+        Measurement::IMeasurementUploader& _measurementUploader;
         Network::Wifi::IWifiManager& _wifiManager;
         CentralUnit::IRamInfoReader& _ramInfoReader;
         Logging::ILogger& _logger;

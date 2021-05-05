@@ -1,33 +1,42 @@
 #include "Arduino.h"
-#include "ArduinoWatchDog.h"
 #include "ArduinoElapsedTimeProvider.h"
+#include "ArduinoWatchDog.h"
+#include "arduino_secrets.h"
 #include "DfRobotSen0232.h"
+#include "HttpTerminal.h"
+#include "LogLevel.h"
 #include "MaximumStrategy.h"
 #include "MeasurementContainer.h"
 #include "MeasurementRecorder.h"
-#include "SenseBoxAnalogPortReader.h"
-#include "SenseboxMcuSketchCoupling.h"
-#include "Winc1500TimeProvider.h"
-#include "arduino_secrets.h"
-#include "WifiManager.h"
-#include "Winc1500WifiConnector.h"
-#include "LogLevel.h"
+#include "MeasurementToCsvLineConverter.h"
+#include "MeasurementToOsemUploader.h"
 #include "NovaSds011.h"
 #include "NovaSds011Driver.h"
 #include "RamInfoReader.h"
+#include "SenseBoxAnalogPortReader.h"
+#include "SenseboxMcuSketchCoupling.h"
 #include "SerialLogger.h"
+#include "TcpStream.h"
 #include "TiHdc1080.h"
 #include "TiHdc1080Driver.h"
+#include "TimeConverter.h"
+#include "WifiManager.h"
 #include "Winc1500TelnetLogger.h"
+#include "Winc1500TimeProvider.h"
+#include "Winc1500WifiConnector.h"
 
 // Reading config
 const char Ssid[] = SECRET_SSID;
 const char Pass[] = SECRET_PASS;
+const char BoxId[] PROGMEM = BOX_ID;
+const char AuthToken[] PROGMEM = AUTH_TOKEN;
 const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID; // Sound level meter
 const char TempSensorId[] PROGMEM = TEMP_SENSOR_ID; // Temperature
 const char RelHumiditySensorId[] PROGMEM = REL_HUMIDITY_SENSOR_ID; // Rel. humidity
 const char Pm10SensorId[] PROGMEM = PM10_SENSOR_ID; // PM10
 const char Pm25SensorId[] PROGMEM = PM25_SENSOR_ID; // PM2.5
+
+const char ServerHostName[] = "ingress.opensensemap.org";
 
 // Prepare Config
 Sketch::SketchConfiguration Configuration = []
@@ -54,23 +63,33 @@ Sketch::SketchConfiguration Configuration = []
 }();
 
 // Prepare IoC
-Peripherals::SenseBoxIoMapper SenseBoxIoMapper;
-Time::ArduinoWatchDog WatchDog;
-Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
-Time::Winc1500TimeProvider TimeProvider;
-Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
-Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
-Sensor::TiHdc1080Driver TiHdc1080Driver;
-Sensor::TiHdc1080 TemperatureSensor { TiHdc1080Driver };
-Sensor::TiHdc1080 HumiditySensor{ TiHdc1080Driver };
-Sensor::NovaSds011Driver NovaSds011Driver{ Serial2 };
-Sensor::NovaSds011 NovaSds{ NovaSds011Driver };
+CentralUnit::RamInfoReader RamInfoReader;
+//Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
+Logging::Winc1500TelnetLogger Logger{ Configuration.Logger_LogLevel };
 Measurement::MaximumStrategy SlmAggregationStrategy;
 Measurement::MaximumStrategy TemperatureAggregationStrategy;
 Measurement::MaximumStrategy HumidityAggregationStrategy;
 Measurement::MaximumStrategy FineDustP25AggregationStrategy;
 Measurement::MaximumStrategy FineDustP10AggregationStrategy;
-Measurement::MeasurementContainer MeasurementContainer{Configuration.MeasurementContainer_Capacity};
+Measurement::MeasurementContainer MeasurementContainer{ Configuration.MeasurementContainer_Capacity };
+Network::Wifi::Winc1500WifiConnector WifiConnector;
+Network::TcpStream TcpStream;
+Peripherals::SenseBoxIoMapper SenseBoxIoMapper;
+Peripherals::SenseBoxAnalogPortReader AnalogPortReader;
+Sensor::TiHdc1080Driver TiHdc1080Driver;
+Sensor::NovaSds011Driver NovaSds011Driver{ Serial2 };
+Sensor::DfRobotSen0232 SlMeter{AnalogPortReader, A1};
+Time::ArduinoWatchDog WatchDog;
+Time::ArduinoElapsedTimeProvider ElapsedTimeProvider;
+Time::Winc1500TimeProvider TimeProvider;
+Time::TimeConverter TimeConverter;
+
+Sensor::TiHdc1080 TemperatureSensor { TiHdc1080Driver };
+Sensor::TiHdc1080 HumiditySensor{ TiHdc1080Driver };
+Sensor::NovaSds011 NovaSds{ NovaSds011Driver };
+Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
+Network::HttpTerminal Terminal{ TcpStream, ElapsedTimeProvider };
+Measurement::MeasurementToCsvLineConverter Converter{ TimeConverter };
 Measurement::MeasurementRecorder SlmMeasurementRecorder
 {
     MeasurementContainer,
@@ -106,11 +125,16 @@ Measurement::MeasurementRecorder FineDustP10MeasurementRecorder
     Configuration.Sensor_Measure_AggregationInterval,
     Pm10SensorId
 };
-Network::Wifi::Winc1500WifiConnector WifiConnector;
-Network::Wifi::WifiManager WifiManager{ WifiConnector, Ssid, Pass };
-CentralUnit::RamInfoReader RamInfoReader;
-//Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
-Logging::Winc1500TelnetLogger Logger{Configuration.Logger_LogLevel};
+Measurement::MeasurementToOsemUploader Uploader
+{
+    Terminal,
+    Converter,
+    ServerHostName,
+    443,
+    BoxId,
+    AuthToken
+};
+
 Sketch::SenseboxMcuSketchCoupling SketchCoupling
 {
     SenseBoxIoMapper,
@@ -127,6 +151,7 @@ Sketch::SenseboxMcuSketchCoupling SketchCoupling
     HumidityMeasurementRecorder,
     FineDustP25MeasurementRecorder,
     FineDustP10MeasurementRecorder,
+    Uploader,
     WifiManager,
     RamInfoReader,
     Logger,
