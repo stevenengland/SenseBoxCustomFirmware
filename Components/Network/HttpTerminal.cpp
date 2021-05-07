@@ -1,5 +1,9 @@
 #include "HttpTerminal.h"
 
+
+
+#include <cctype>
+#include <cstdlib>
 #include <cstring>
 
 namespace Network
@@ -61,6 +65,7 @@ namespace Network
             count++;
         }
 
+        // ReSharper disable once CppAssignedValueIsNeverUsed
         *responseBuffer++ = '\0';
         return _tcpStream.IsAvailable() ? InProgress : Completed;
     }
@@ -78,5 +83,59 @@ namespace Network
     void HttpTerminal::CloseConnection()
     {
         _tcpStream.Stop();
+    }
+
+    int HttpTerminal::TryExtractHttpStatusCode(char* responseBuffer, const size_t lengthOfResponseBuffer)
+    {
+        auto inStatus = false;
+        char statusCode[4]{};
+        auto j = 0;
+        auto code = -1;
+
+        for (size_t i = 0; i < lengthOfResponseBuffer; i++)
+        {
+            const auto c = responseBuffer[i];
+
+            // Every HTTP status line begins with a H.
+            if (i == 0 && (c != 'h' && c != 'H'))
+            {
+                return -1;
+            }
+
+            // End of line is also the end of the status line.
+            if (c == '\r')
+            {
+                break;
+            }
+
+            // The first SP separates the status code from the HTTP version string.
+            if (c == ' ' && !inStatus)
+            {
+                inStatus = true;
+                continue;
+            }
+
+            if (inStatus && j < 3)
+            {
+                if (isdigit(c))
+                {
+                    statusCode[j] = c;
+                    j++;
+                }
+                else // Sequence of three digits interrupted.
+                {
+                    break;
+                }
+            }
+
+            if (j == 3)
+            {
+                statusCode[j] = '\0';
+                code = atoi(statusCode);  // NOLINT(cert-err34-c)
+                break;
+            }
+        }
+
+        return code;
     }
 }

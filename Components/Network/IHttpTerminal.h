@@ -17,6 +17,7 @@ namespace Network
         virtual size_t SendBody(const char* payload) = 0;
         virtual size_t SendEmptyLine() = 0;
         virtual TransmissionStatus ReadResponse(char* responseBuffer, size_t lengthOfResponseBuffer, unsigned long timeout = 5000) = 0;
+        virtual int TryExtractHttpStatusCode(char* responseBuffer, size_t lengthOfResponseBuffer) = 0;
         virtual void CloseConnection() = 0;
     };
 }

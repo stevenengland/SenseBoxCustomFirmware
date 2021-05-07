@@ -7,11 +7,16 @@ using namespace testing;
 
 namespace NetworkTests
 {
-    class HttpTerminalShould :public Test {
+    class HttpTerminalShould : public Test 
+    {
     protected:
         Network::TcpStreamMock _tcpStreamMock;
         Time::ElapsedTimeProviderMock _elapsedTimeProviderMock;
         Network::HttpTerminal _terminal { _tcpStreamMock, _elapsedTimeProviderMock };
+    };
+
+    class GivenStatusCodes_HttpTerminalShould : public HttpTerminalShould, public WithParamInterface<std::tuple<std::string, int>>
+    {
     };
 
     TEST_F(HttpTerminalShould, CloseConnectionCorrectly)
@@ -206,4 +211,29 @@ namespace NetworkTests
         ASSERT_EQ(Completed, tStatus2);
         ASSERT_STREQ("", buffer);
     }
+
+    TEST_P(GivenStatusCodes_HttpTerminalShould, ReturnCorrectStatusCode) 
+    {
+        std::string input = std::get<0>(GetParam());
+        char* cstr = &input[0];
+        int expected = std::get<1>(GetParam());
+
+        auto statusCode = _terminal.TryExtractHttpStatusCode(cstr, input.length() + 1);
+
+        ASSERT_EQ(statusCode, expected);
+    }
+
+    INSTANTIATE_TEST_SUITE_P(
+        HttpTerminalTests,
+        GivenStatusCodes_HttpTerminalShould,
+        ::testing::Values(
+                std::make_tuple("HTTP/1.1 200 OK\r\n", 200), // Normal response
+                std::make_tuple("HTTP/1.1 200 OK", 200), // No end of line
+                std::make_tuple("HTTP/1.1 2000 OK", 200), // More than three digits
+                std::make_tuple("http/1.1 200 OK", 200), // Small h
+                std::make_tuple("xttp/1.1 200 OK", -1), // Wrong first character
+                std::make_tuple("HTTP/1.1  200 OK", -1), // Two SP
+                std::make_tuple("HTTP/1.1 2a00 OK", -1),
+                std::make_tuple("HTTP/1.1\r 200 OK", -1)
+                ));
 }

@@ -24,6 +24,7 @@ namespace Network
         size_t SendBody(const char* payload) override;
         size_t SendEmptyLine() override;
         void CloseConnection() override;
+        int TryExtractHttpStatusCode(char* responseBuffer, size_t lengthOfResponseBuffer) override;
     private:
         ITcpStream& _tcpStream;
         Time::IElapsedTimeProvider& _elapsedTimeProvider;

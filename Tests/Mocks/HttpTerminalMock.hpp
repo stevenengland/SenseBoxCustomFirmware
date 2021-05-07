@@ -15,6 +15,7 @@ namespace Network
         MOCK_METHOD(size_t, SendBody, (const char* payload), (override));
         MOCK_METHOD(size_t, SendEmptyLine, (), (override));
         MOCK_METHOD(TransmissionStatus, ReadResponse, (char* responseBuffer, size_t lengthOfResponseBuffer, unsigned long timeout), (override));
+        MOCK_METHOD(int, TryExtractHttpStatusCode, (char* responseBuffer, size_t lengthOfResponseBuffer), (override));
         MOCK_METHOD(void, CloseConnection, (), (override));
     };
 }

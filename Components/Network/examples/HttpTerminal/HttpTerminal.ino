@@ -1,15 +1,3 @@
-/*
-This example creates a client object that connects and transfers
-data using always SSL.
-
-It is compatible with the methods normally related to plain
-connections, like client.connect(host, port).
-
-Written by Arturo Guadalupi
-last revision November 2015
-
-*/
-
 #include <SPI.h>
 #include <WiFi101.h>
 
@@ -82,13 +70,21 @@ void loop() {
     // if there are incoming bytes available
     // from the server, read them and print them:
 
-    char buffer[10]{};
-    bool proceedReading = true;
+    char buffer[100]{}; // Just big enough to read the status line is fine.
+    auto proceedReading = true;
+    auto tryReadStatusCode = true;
     while (proceedReading) 
     {
         auto tStatus = Terminal.ReadResponse(buffer, sizeof(buffer), 5000);
         if (tStatus == InProgress || tStatus == Completed)
         {
+            if (tryReadStatusCode)
+            {
+                Serial.print("Status Code received: ");
+                Serial.println(Terminal.TryExtractHttpStatusCode(buffer, sizeof(buffer)));
+                tryReadStatusCode = false;
+            }
+
             Serial.write(buffer);
             if (tStatus == Completed)
             {
