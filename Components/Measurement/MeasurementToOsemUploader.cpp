@@ -53,6 +53,28 @@ namespace Measurement
         return _httpTerminal.ReadResponse(responseBuffer, lengthOfResponseBuffer, timeout);
     }
 
+    ProcessingStatus MeasurementToOsemUploader::TryExtractUploadSuccess(char* responseBuffer, size_t lengthOfResponseBuffer)
+    {
+        auto const status = _httpTerminal.TryExtractHttpStatusCode(responseBuffer, lengthOfResponseBuffer);
+        if (status == -1)
+        {
+            return UnknownException;
+        }
+
+        if (status > 499)
+        {
+            return TechnicalError;
+        }
+
+        if (status > 399)
+        {
+            return FunctionalError;
+        }
+
+        return Success;
+    }
+
+
     void MeasurementToOsemUploader::EndUpload()
     {
         _httpTerminal.CloseConnection();

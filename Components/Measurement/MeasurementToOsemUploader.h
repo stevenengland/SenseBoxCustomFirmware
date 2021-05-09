@@ -28,6 +28,7 @@ namespace Measurement
 
         TransmissionStatus TrySendUpload(IMeasurementContainer& container) override;
         TransmissionStatus ReadUploadResponse(char* responseBuffer, size_t lengthOfResponseBuffer, unsigned long timeout = 5000) override;
+        ProcessingStatus TryExtractUploadSuccess(char* responseBuffer, size_t lengthOfResponseBuffer) override;
         void EndUpload() override;
     private:
         Network::IHttpTerminal& _httpTerminal;

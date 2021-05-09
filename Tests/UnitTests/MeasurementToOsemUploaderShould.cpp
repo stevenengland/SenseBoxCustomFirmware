@@ -24,6 +24,10 @@ namespace MeasurementTests
         };
     };
 
+    class GivenStatusCodes_MeasurementToOsemUploaderShould : public MeasurementToOsemUploaderShould, public WithParamInterface<std::tuple<int, ProcessingStatus>>
+    {
+    };
+
     TEST_F(MeasurementToOsemUploaderShould, CloseConnection_WhenEndingUpload)
     {
         EXPECT_CALL(_httpTerminalMock, CloseConnection()).Times(1);
@@ -104,4 +108,26 @@ namespace MeasurementTests
 
         _uploader.TrySendUpload(_containerMock);
     }
+
+    TEST_P(GivenStatusCodes_MeasurementToOsemUploaderShould, Return_CorrectProcessingStatus)
+    {
+        int input = std::get<0>(GetParam());
+        ProcessingStatus expected = std::get<1>(GetParam());
+        char buffer[10]{};
+        ON_CALL(_httpTerminalMock, TryExtractHttpStatusCode(_, _)).WillByDefault(Return(input));
+
+        auto const status = _uploader.TryExtractUploadSuccess(buffer, sizeof(buffer));
+
+        ASSERT_EQ(status, expected);
+    }
+
+    INSTANTIATE_TEST_SUITE_P(
+        MeasurementToOsemUploaderTests,
+        GivenStatusCodes_MeasurementToOsemUploaderShould,
+        ::testing::Values(
+                std::make_tuple(200, Success), 
+                std::make_tuple(400, FunctionalError),
+                std::make_tuple(500, TechnicalError), 
+                std::make_tuple(-1, UnknownException)
+                ));
 }
