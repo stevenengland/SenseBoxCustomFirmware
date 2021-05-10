@@ -26,6 +26,7 @@ namespace SketchTests
     {
     protected:
         int _standardInterval = 9999;
+        int _ltStandardInterval = 5000;
         Sketch::SketchConfiguration _configuration = [&]
         {
             Sketch::SketchConfiguration c{};
@@ -44,6 +45,7 @@ namespace SketchTests
             c.SoundLevelMeter_Measure_AggregationInterval = 1;
             c.FineDustSensor_Measure_Interval = _standardInterval;
             c.Osem_Upload_Interval = _standardInterval;
+            c.Osem_Upload_Interval_ErrorCondition = _ltStandardInterval;
             c.HealthCheck_Interval = _standardInterval;
 
             return c;
@@ -346,5 +348,31 @@ namespace SketchTests
     }
 
 #pragma endregion Measurement
+
+#pragma region MeasurementUpload
+
+    TEST_F(SenseboxMcuSketchCouplingShould, ClearMeasurements_IfUploadWasProcessedSuccessfully)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Osem_Upload_Interval + 1));
+        ON_CALL(_measurementUploaderMock, TrySendUpload(_)).WillByDefault(Return(Completed));
+        ON_CALL(_measurementUploaderMock, ReadUploadResponse(_, _, _)).WillByDefault(Return(Completed));
+        ON_CALL(_measurementUploaderMock, TryExtractUploadSuccess(_, _)).WillByDefault(Return(Success));
+        EXPECT_CALL(_measurementContainerMock, ClearMeasurements()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, FinalizeUpload_InAnyCase)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.Osem_Upload_Interval + 1));
+        ON_CALL(_measurementUploaderMock, TrySendUpload(_)).WillByDefault(Return(Completed));
+        ON_CALL(_measurementUploaderMock, ReadUploadResponse(_, _, _)).WillByDefault(Return(Completed));
+        ON_CALL(_measurementUploaderMock, TryExtractUploadSuccess(_, _)).WillByDefault(Return(Success));
+        EXPECT_CALL(_measurementContainerMock, ClearMeasurements()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+#pragma endregion MeasurementUpload
 
 }

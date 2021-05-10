@@ -29,6 +29,7 @@ namespace Sketch
         int FineDustSensor_Measure_Interval;
 
         int Osem_Upload_Interval;
+        int Osem_Upload_Interval_ErrorCondition;
 
         int HealthCheck_Interval;
     } SketchConfiguration;

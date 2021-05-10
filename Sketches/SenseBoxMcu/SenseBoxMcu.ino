@@ -50,13 +50,14 @@ Sketch::SketchConfiguration Configuration = []
     c.NetworkProvider_ConnectionRequest_RetryCount = 20;
     c.NetworkProvider_ConnectionStatus_CheckInterval = 30000;
     c.WatchDog_KeepAlive_TimeoutInterval = 16000;
-    c.MeasurementContainer_Capacity = 1000;
+    c.MeasurementContainer_Capacity = 1300;
     c.Sensor_Measure_Interval = 60000;
     c.Sensor_Measure_AggregationInterval = 0;
     c.SoundLevelMeter_Measure_Interval = 300;
     c.SoundLevelMeter_Measure_AggregationInterval = 1;
     c.FineDustSensor_Measure_Interval = 600000;
     c.Osem_Upload_Interval = 300000;
+    c.Osem_Upload_Interval_ErrorCondition = 60000;
     c.HealthCheck_Interval = 60000;
 
     return c;

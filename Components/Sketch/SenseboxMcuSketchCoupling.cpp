@@ -1,5 +1,7 @@
 #include "SenseboxMcuSketchCoupling.h"
 #include "math.h"
+#include "ProcessingStatus.h"
+#include "TransmissionStatus.h"
 
 namespace Sketch
 {
@@ -144,7 +146,49 @@ namespace Sketch
             // Upload to OSeM
             _logger.NoticeP("Starting upload to OSeM\n");
 
-            _measurementContainer.ClearMeasurements(); // ToDo: Only if upload was successful
+            const auto uploadStatus = _measurementUploader.TrySendUpload(_measurementContainer);
+            if (uploadStatus == Completed)
+            {
+                _logger.NoticeP("Data sent, reading response\n");
+                char buffer[100]{}; // Must be big enough to read a complete status line.
+                auto proceedReading = true;
+                auto tryReadUploadStatus = true;
+                while (proceedReading)
+                {
+                    auto const responseStatus = _measurementUploader.ReadUploadResponse(buffer, sizeof(buffer));
+                    if (responseStatus != InProgress)
+                    {
+                        proceedReading = false;
+                    }
+
+                    if (tryReadUploadStatus) // Try to read status code only the first time we receive the buffer -> should contain the status line if buffer size is big enough.
+                    {
+                        auto const statusCode = _measurementUploader.TryExtractUploadSuccess(buffer, sizeof(buffer));
+                        tryReadUploadStatus = false;
+
+                        if (statusCode == Success)
+                        {
+                            _logger.NoticeP("Response Status: Success\n");
+                            _measurementContainer.ClearMeasurements();
+                            // _uploadToOsemTimer.SetInterval(_configuration.Osem_Upload_Interval);
+                        }
+                        else
+                        {
+                            _logger.ErrorP("Response Status: %d\n", statusCode);
+                            // _uploadToOsemTimer.SetInterval(_configuration.Osem_Upload_Interval_ErrorCondition);
+                        }
+                    }
+
+                    _logger.Notice(buffer);
+                }
+            }
+            else
+            {
+                _logger.ErrorP("Upload failed with transmission Status: %d\n", uploadStatus);
+                // _uploadToOsemTimer.SetInterval(_configuration.Osem_Upload_Interval_ErrorCondition);
+            }
+
+            _measurementUploader.EndUpload();
         }
 
         if (_healthCheckTimer.HasIntervalElapsed())
