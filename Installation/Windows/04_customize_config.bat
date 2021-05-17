@@ -1,5 +1,5 @@
 @echo off
-set CONFIG="..\..\Sketches\SenseBoxMcu\arduino_secrets.h"
+set CONFIG="..\..\Sketches\SenseBoxMcu\SketchConfig.h"
 if exist %CONFIG% (
     notepad %CONFIG%
 ) else (
