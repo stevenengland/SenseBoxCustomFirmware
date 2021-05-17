@@ -1,7 +1,6 @@
 #include "Arduino.h"
 #include "ArduinoElapsedTimeProvider.h"
 #include "ArduinoWatchDog.h"
-#include "arduino_secrets.h"
 #include "DfRobotSen0232.h"
 #include "HttpTerminal.h"
 #include "LogLevel.h"
@@ -16,6 +15,7 @@
 #include "SenseBoxAnalogPortReader.h"
 #include "SenseboxMcuSketchCoupling.h"
 #include "SerialLogger.h"
+#include "SketchConfig.h"
 #include "TcpStream.h"
 #include "TiHdc1080.h"
 #include "TiHdc1080Driver.h"
@@ -26,11 +26,11 @@
 #include "Winc1500WifiConnector.h"
 
 // Reading config
-const char Ssid[] = SECRET_SSID;
-const char Pass[] = SECRET_PASS;
-const char BoxId[] PROGMEM = BOX_ID;
-const char AuthToken[] PROGMEM = AUTH_TOKEN;
-const char SlmId[] PROGMEM = SECRET_SENSOR_SOUND_ID; // Sound level meter
+const char Ssid[] = WIFI_SSID;
+const char Pass[] = WIFI_PASS;
+const char BoxId[] PROGMEM = SENSEBOX_ID;
+const char AuthToken[] PROGMEM = SENSEBOX_AUTH_TOKEN;
+const char SlmId[] PROGMEM = SOUND_SENSOR_ID; // Sound level meter
 const char TempSensorId[] PROGMEM = TEMP_SENSOR_ID; // Temperature
 const char RelHumiditySensorId[] PROGMEM = REL_HUMIDITY_SENSOR_ID; // Rel. humidity
 const char Pm10SensorId[] PROGMEM = PM10_SENSOR_ID; // PM10
@@ -43,7 +43,7 @@ Sketch::SketchConfiguration Configuration = []
 {
     Sketch::SketchConfiguration c{};
 
-    c.Logger_LogLevel = LogLevelVerbose;
+    c.Logger_LogLevel = LOG_LEVEL;
     c.TimeProvider_TimeRequest_RetryInterval = 1000;
     c.TimeProvider_TimeRequest_RetryCount = 5;
     c.NetworkProvider_ConnectionRequest_RetryInterval = 1000;

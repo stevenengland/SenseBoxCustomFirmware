@@ -1,0 +1,20 @@
+#pragma once;
+
+/* --- WiFi Credentials ---- */
+#define WIFI_SSID "WiFi name"
+#define WIFI_PASS "WiFi password"
+
+/* --- Sensebox Credentials and IDs ---- */
+#define SENSEBOX_ID "Sensebox ID"
+#define SENSEBOX_AUTH_TOKEN "Authentication token"
+
+#define SOUND_SENSOR_ID "ID of sound level meter"
+#define TEMP_SENSOR_ID "ID of temperature sensor";
+#define REL_HUMIDITY_SENSOR_ID "ID of humidity sensor";
+#define PM10_SENSOR_ID "ID of PM10 finedust sensor";
+#define PM25_SENSOR_ID "ID of PM2.5 finedust sensor";
+
+/* --- Sensebox Peripherals ---- */
+
+/* --- Debugging ---- */
+#define LOG_LEVEL = LogLevelError;

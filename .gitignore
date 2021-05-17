@@ -6,3 +6,4 @@ build
 /Configurations/arduino.ini
 **/arduino_secrets.h
 /Sketches/Playground/Playground.ino
+/Sketches/SenseBoxMcu/SketchConfig.h
