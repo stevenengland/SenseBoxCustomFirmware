@@ -9,12 +9,16 @@
 #define SENSEBOX_AUTH_TOKEN "Authentication token"
 
 #define SOUND_SENSOR_ID "ID of sound level meter"
-#define TEMP_SENSOR_ID "ID of temperature sensor";
-#define REL_HUMIDITY_SENSOR_ID "ID of humidity sensor";
-#define PM10_SENSOR_ID "ID of PM10 finedust sensor";
-#define PM25_SENSOR_ID "ID of PM2.5 finedust sensor";
+#define TEMP_SENSOR_ID "ID of temperature sensor"
+#define REL_HUMIDITY_SENSOR_ID "ID of humidity sensor"
+#define PM10_SENSOR_ID "ID of PM10 finedust sensor"
+#define PM25_SENSOR_ID "ID of PM2.5 finedust sensor"
 
 /* --- Sensebox Peripherals ---- */
 
 /* --- Debugging ---- */
-#define LOG_LEVEL = LogLevelError;
+#define LOGGER_SERIAL (1)
+#define LOGGER_TELNET (2)
+
+#define LOG_LEVEL = LogLevelError
+#define LOG_LOGGER LOGGER_TELNET

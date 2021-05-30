@@ -65,8 +65,13 @@ Sketch::SketchConfiguration Configuration = []
 
 // Prepare IoC
 CentralUnit::RamInfoReader RamInfoReader;
-//Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
-Logging::Winc1500TelnetLogger Logger{ Configuration.Logger_LogLevel };
+#if (LOG_LOGGER == LOGGER_SERIAL)
+    Logging::SerialLogger Logger{ Configuration.Logger_LogLevel };
+#elif (LOG_LOGGER == LOGGER_TELNET)
+    Logging::Winc1500TelnetLogger Logger{ Configuration.Logger_LogLevel };
+#else
+#error Unknown logger 
+#endif
 Measurement::MaximumStrategy SlmAggregationStrategy;
 Measurement::MaximumStrategy TemperatureAggregationStrategy;
 Measurement::MaximumStrategy HumidityAggregationStrategy;
