@@ -20,5 +20,5 @@
 #define LOGGER_SERIAL (1)
 #define LOGGER_TELNET (2)
 
-#define LOG_LEVEL = LogLevelError
+#define LOG_LEVEL LogLevelError
 #define LOG_LOGGER LOGGER_TELNET
