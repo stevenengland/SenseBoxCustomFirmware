@@ -11,5 +11,7 @@ namespace Sensor
     public:
         MOCK_METHOD(void, Begin, (), (override));
         MOCK_METHOD(void, Read, (float& p25, float& p10, bool& error), (override));
+        MOCK_METHOD(void, Sleep, (), (override));
+        MOCK_METHOD(void, Wakeup, (), (override));
     };
 }

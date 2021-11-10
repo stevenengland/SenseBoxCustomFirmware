@@ -9,5 +9,7 @@ namespace Sensor
 
         virtual void Begin() = 0;
         virtual void Read(float& p25, float& p10, bool& error) = 0;
+        virtual void Sleep() = 0;
+        virtual void Wakeup() = 0;
     };
 }

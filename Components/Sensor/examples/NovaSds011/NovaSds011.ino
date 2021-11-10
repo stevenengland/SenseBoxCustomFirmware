@@ -19,10 +19,31 @@ void setup()
 void loop()
 {
     Serial.print("Loop");
-    const auto values = Sds.ReadValues();
+    auto values = Sds.ReadValues();
     Serial.print("25: ");
     Serial.println(values.Reads[0]);
     Serial.print("10: ");
     Serial.println(values.Reads[1]);
+    delay(10000);
+    Serial.println("Sending sensor to sleep mode. Can you hear it anymore? :)");
+    Sds.Sleep();
+    delay(10000);
+    Serial.println("Trying to read values from the sensor...");
+    values = Sds.ReadValues();
+    Serial.print("25: ");
+    Serial.println(values.Reads[0]);
+    Serial.print("10: ");
+    Serial.println(values.Reads[1]);
+    delay(2000);
+    Serial.println("Waking up the sensor again...");
+    Sds.Wakeup();
+    delay(10000);
+    Serial.println("Trying to read values from the sensor...");
+    values = Sds.ReadValues();
+    Serial.print("25: ");
+    Serial.println(values.Reads[0]);
+    Serial.print("10: ");
+    Serial.println(values.Reads[1]);
+    Serial.println("Finished.");
     delay(60000);
 }

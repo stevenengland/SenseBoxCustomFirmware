@@ -86,4 +86,18 @@ namespace SensorTests
         ASSERT_TRUE(isnan(values.Reads[0]));
         ASSERT_TRUE(isnan(values.Reads[1]));
     }
+
+    TEST_F(NovaSds011Should, CallDriver_WhenAskedToSleep)
+    {
+        EXPECT_CALL(_novaSds011DriverMock, Sleep()).Times(1);
+
+        _sensor.Sleep();
+    }
+
+    TEST_F(NovaSds011Should, CallDriver_WhenAskedToWakeUp)
+    {
+        EXPECT_CALL(_novaSds011DriverMock, Wakeup()).Times(1);
+
+        _sensor.Wakeup();
+    }
 }

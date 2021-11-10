@@ -10,6 +10,16 @@ namespace Sensor
         return true;
     }
 
+    void NovaSds011::Sleep()
+    {
+        _driver.Sleep();
+    }
+
+    void NovaSds011::Wakeup()
+    {
+        _driver.Wakeup();
+    }
+
     float NovaSds011::ReadValue(const int phenomenonId)
     {
         if (phenomenonId > 1)

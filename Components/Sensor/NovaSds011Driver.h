@@ -17,7 +17,8 @@ namespace Sensor
 
         void Begin() override;
         void Read(float& p25, float& p10, bool& error) override;
-
+        void Sleep() override;
+        void Wakeup() override;
     private:
         bool _needsInit = true;
         Uart& _uart;
