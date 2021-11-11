@@ -1,12 +1,13 @@
 #pragma once
 
+#include "IHibernatableSensor.h"
 #include "ISensor.h"
 #include "ISensorPowerSaveMode.h"
 #include "INovaSds011Driver.h"
 
 namespace Sensor
 {
-    class NovaSds011 final : public ISensor, public ISensorPowerSaveMode
+    class NovaSds011 final : public IHibernatableSensor
     {
     public:
         explicit NovaSds011(INovaSds011Driver& driver)

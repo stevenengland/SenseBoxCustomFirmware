@@ -2,8 +2,9 @@
 
 namespace Sensor
 {
-    struct ISensorPowerSaveMode
+    class ISensorPowerSaveMode
     {
+    public:
         virtual ~ISensorPowerSaveMode() = default;
 
         virtual void Sleep() = 0;
