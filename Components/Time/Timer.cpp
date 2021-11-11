@@ -19,6 +19,11 @@ namespace Time
         return false;
     }
 
+    void Timer::Reset()
+    {
+        _timeLastRun = _elapsedTimeProvider.ElapsedMilliseconds();
+    }
+
     void Timer::SetInterval(const long interval)
     {
         _interval = interval;

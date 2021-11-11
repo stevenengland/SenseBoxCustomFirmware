@@ -56,4 +56,26 @@ namespace TimeTests
         ASSERT_FALSE(Timer.HasIntervalElapsed());
         ASSERT_TRUE(Timer.HasIntervalElapsed());
     }
+
+    TEST_F(TimerShould, ReturnFalse_IfTimeHasElapsedButTimerWasResetInTheMeanwhile) {
+        EXPECT_CALL(ElapsedTimeProviderMock, ElapsedMilliseconds())
+            .WillOnce(Return(9998))   // has elapsed?
+            .WillOnce(Return(9999))   // reset
+            .WillOnce(Return(10001)); // has elapsed?
+
+        ASSERT_FALSE(Timer.HasIntervalElapsed());
+        Timer.Reset();
+        ASSERT_FALSE(Timer.HasIntervalElapsed());
+    }
+
+    TEST_F(TimerShould, ReturnTrue_IfTimeHasElapsedAfterTimerWasReset) {
+        EXPECT_CALL(ElapsedTimeProviderMock, ElapsedMilliseconds())
+            .WillOnce(Return(9998)) // has elapsed?
+            .WillOnce(Return(9999)) // reset
+            .WillOnce(Return(20000)); // has elapsed?
+
+        ASSERT_FALSE(Timer.HasIntervalElapsed());
+        Timer.Reset();
+        ASSERT_TRUE(Timer.HasIntervalElapsed());
+    }
 }

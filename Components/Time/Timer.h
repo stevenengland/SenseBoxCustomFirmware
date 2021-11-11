@@ -11,6 +11,7 @@ namespace Time
 
         void SetInterval(long interval);
         bool HasIntervalElapsed();
+        void Reset();
     private:
         IElapsedTimeProvider& _elapsedTimeProvider;
         unsigned long _interval = 1000;
