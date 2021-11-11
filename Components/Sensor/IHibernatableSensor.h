@@ -4,7 +4,7 @@
 
 namespace Sensor
 {
-    class IHibernatableSensor : public ISensor, ISensorPowerSaveMode
+    class IHibernatableSensor : public ISensor, public ISensorPowerSaveMode
     {
     };
 }
