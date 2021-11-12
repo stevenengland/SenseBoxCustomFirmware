@@ -6,6 +6,7 @@
 #include "IElapsedTimeProvider.h"
 #include "IMeasurementContainer.h"
 #include "ISensor.h"
+#include "IHibernatableSensor.h"
 #include "IMeasurementRecorder.h"
 #include "ITimeProvider.h"
 #include "IWifiManager.h"
@@ -28,7 +29,7 @@ namespace Sketch
             Sensor::ISensor& soundLevelMeter,
             Sensor::ISensor& temperatureSensor,
             Sensor::ISensor& humiditySensor,
-            Sensor::ISensor& fineDustSensor,
+            Sensor::IHibernatableSensor& fineDustSensor,
             Measurement::IMeasurementContainer& measurementContainer,
             Measurement::IMeasurementRecorder& slmMeasurementRecorder,
             Measurement::IMeasurementRecorder& temperatureMeasurementRecorder,
@@ -75,7 +76,7 @@ namespace Sketch
         Sensor::ISensor& _soundLevelMeter;
         Sensor::ISensor& _temperatureSensor;
         Sensor::ISensor& _humiditySensor;
-        Sensor::ISensor& _fineDustSensor;
+        Sensor::IHibernatableSensor& _fineDustSensor;
         Measurement::IMeasurementContainer& _measurementContainer;
         Measurement::IMeasurementRecorder& _slmMeasurementRecorder;
         Measurement::IMeasurementRecorder& _temperatureMeasurementRecorder;
@@ -89,6 +90,7 @@ namespace Sketch
         SketchConfiguration& _configuration;
         Time::Timer _soundLevelMeasurementTimer{ _elapsedTimeProvider, _configuration.SoundLevelMeter_Measure_Interval };
         Time::Timer _fineDustSensorMeasurementTimer{ _elapsedTimeProvider, _configuration.FineDustSensor_Measure_Interval };
+        Time::Timer _fineDustSensorWakeupTimer{ _elapsedTimeProvider, _configuration.FineDustSensor_Measure_Interval - 60000 };
         Time::Timer _generalMeasurementTimer{ _elapsedTimeProvider, _configuration.Sensor_Measure_Interval };
         Time::Timer _uploadToOsemTimer{ _elapsedTimeProvider, _configuration.Osem_Upload_Interval };
         Time::Timer _checkAndReconnectWifiTimer{ _elapsedTimeProvider, _configuration.NetworkProvider_ConnectionStatus_CheckInterval };

@@ -28,6 +28,10 @@ namespace Sketch
         _humiditySensor.Init();
         _fineDustSensor.Init();
 
+        // Wait a little before sending sensors to sleep
+        _elapsedTimeProvider.WaitSync(2000);
+        _fineDustSensor.Sleep();
+
         // Attempt to turn on WiFi
         _wifiManager.Connect();
 
@@ -100,6 +104,12 @@ namespace Sketch
             }
         }
 
+        if (_fineDustSensorWakeupTimer.HasIntervalElapsed())
+        {
+            _logger.NoticeP("Waking up fine dust sensor\n");
+            _fineDustSensor.Wakeup();
+        }
+
         if (_fineDustSensorMeasurementTimer.HasIntervalElapsed())
         {
             // Measure fine dust sensors
@@ -128,6 +138,10 @@ namespace Sketch
             {
                 _logger.WarningP("Could not read PM10\n");
             }
+
+            _logger.NoticeP("Sending fine dust sensor to sleep\n");
+            _fineDustSensor.Sleep();
+            _fineDustSensorWakeupTimer.Reset(); // ToDo: Test (by means of time provider mock returning values multiple times and checking if the wakeup command was not triggered  before finedusttimer + finedusttimer - 1000 elapsed -> reset must have been executed)
         }
 
         if(_checkAndReconnectWifiTimer.HasIntervalElapsed())

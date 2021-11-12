@@ -14,6 +14,7 @@
 #include "SenseBoxIoMapperMock.hpp"
 #include "SenseboxMcuSketchCoupling.h"
 #include "SensorMock.hpp"
+#include "HibernatableSensorMock.hpp"
 #include "TimeProviderMock.hpp"
 #include "WatchDogMock.hpp"
 #include "WifiManagerMock.hpp"
@@ -65,7 +66,7 @@ namespace SketchTests
         Sensor::SensorMock _soundLevelMeterMock;
         Sensor::SensorMock _temperatureSensorMock;
         Sensor::SensorMock _humiditySensorMock;
-        Sensor::SensorMock _fineDustSensorMock;
+        Sensor::HibernatableSensorMock _fineDustSensorMock;
         Measurement::MeasurementContainerMock _measurementContainerMock;
         Measurement::MeasurementRecorderMock _slmMeasurementRecorderMock;
         Measurement::MeasurementRecorderMock _temperatureMeasurementRecorderMock;
@@ -124,6 +125,7 @@ namespace SketchTests
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(false));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(1));
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(5000)).Times(1);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(2000)).Times(1);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_configuration.NetworkProvider_ConnectionRequest_RetryInterval)).Times(_configuration.NetworkProvider_ConnectionRequest_RetryCount);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(Ge(_configuration.WatchDog_KeepAlive_TimeoutInterval))).Times(1);
 
@@ -145,6 +147,7 @@ namespace SketchTests
         ON_CALL(_wifiManagerMock, IsConnected()).WillByDefault(Return(true));
         ON_CALL(_timeProviderMock, GetEpochTime()).WillByDefault(Return(0));
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(5000)).Times(1);
+        EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(2000)).Times(1);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(_configuration.TimeProvider_TimeRequest_RetryInterval)).Times(_configuration.TimeProvider_TimeRequest_RetryCount);
         EXPECT_CALL(_elapsedTimeProviderMock, WaitSync(Ge(_configuration.WatchDog_KeepAlive_TimeoutInterval))).Times(1);
 
@@ -251,6 +254,13 @@ namespace SketchTests
         _sketchCoupling.Setup();
     }
 
+    TEST_F(SenseboxMcuSketchCouplingShould, SendFineDustSensorToSleep_DuringSetup)
+    {
+        EXPECT_CALL(_fineDustSensorMock, Sleep()).Times(1);
+
+        _sketchCoupling.Setup();
+    }
+
     TEST_F(SenseboxMcuSketchCouplingShould, RecordSound_WhenIntervalElapsedDuringLoop)
     {
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.SoundLevelMeter_Measure_Interval + 1));
@@ -343,6 +353,22 @@ namespace SketchTests
         ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
         EXPECT_CALL(_fineDustP10MeasurementRecorderMock, Record(_, _)).Times(0);
         EXPECT_CALL(_fineDustSensorMock, ReadValues()).Times(1).WillOnce(Return(reads));
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, SendFineDustSensorToSleep_WhenIntervalElapsedDuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval + 1));
+        EXPECT_CALL(_fineDustSensorMock, Sleep()).Times(1);
+
+        _sketchCoupling.Loop();
+    }
+
+    TEST_F(SenseboxMcuSketchCouplingShould, WakeupFineDustSensor_WhenIntervalElapsedDuringLoop)
+    {
+        ON_CALL(_elapsedTimeProviderMock, ElapsedMilliseconds()).WillByDefault(Return(_configuration.FineDustSensor_Measure_Interval - 60000 + 1));
+        EXPECT_CALL(_fineDustSensorMock, Wakeup()).Times(1);
 
         _sketchCoupling.Loop();
     }
