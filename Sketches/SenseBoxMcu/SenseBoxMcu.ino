@@ -24,8 +24,11 @@
 #include "Winc1500TelnetLogger.h"
 #include "Winc1500TimeProvider.h"
 #include "Winc1500WifiConnector.h"
+#include "Version.h"
 
 // Reading config
+const char SwVersion[] PROGMEM = SW_VERSION;
+
 const char Ssid[] = WIFI_SSID;
 const char Pass[] = WIFI_PASS;
 const char BoxId[] PROGMEM = SENSEBOX_ID;
